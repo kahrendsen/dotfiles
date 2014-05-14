@@ -1,3 +1,8 @@
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+#256 Color
 if [ -e /usr/share/terminfo/x/xterm-256color ]; then
         export TERM='xterm-256color'
 else
@@ -22,3 +27,8 @@ shopt -s histappend histreedit histverify
 shopt -s extglob       # Necessary for programmable completion.
 #Attempt to correct spelling of directory names when word completing if directory doesn't exist
 shopt -s dirspell
+
+
+
+
+
