@@ -1,3 +1,72 @@
+" Vundle stuff
+" Install: git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+"Plugin 'tpope/vim-fugitive'
+" plugin from http://vim-scripts.org/vim/scripts.html
+"Plugin 'L9'
+" Git plugin not hosted on GitHub
+"Plugin 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (i.e. when working on your own plugin)
+"Plugin 'file:///home/gmarik/path/to/plugin'
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" Avoid a name conflict with L9
+"Plugin 'user/L9', {'name': 'newL9'}
+
+Plugin 'kien/ctrlp.vim'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'scrooloose/nerdtree'
+Plugin 'minibufexplorerpp'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'msanders/snipmate.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+
+" Colors
+Plugin 'desert256.vim'
+Plugin 'tpope/vim-vividchalk'
+Plugin 'Railscasts-Theme-GUIand256color'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'inkpot'
+
+
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList          - list configured plugins
+" :PluginInstall(!)    - install (update) plugins
+" :PluginSearch(!) foo - search (or refresh cache first) for foo
+" :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+
+
+
+
+
 " URL: http://vim.wikia.com/wiki/Example_vimrc
 " Authors: http://vim.wikia.com/wiki/Vim_on_Freenode
 " Description: A minimal, but feature rich, example .vimrc. If you are a
@@ -13,7 +82,7 @@
 
 " Set 'nocompatible' to ward off unexpected things that your distro might
 " have made, as well as sanely reset options when re-sourcing .vimrc
-set nocompatible
+" set nocompatible
 
 " Attempt to determine the type of a file based on its name and possibly its
 " contents. Use this to allow intelligent auto-indenting for each filetype,
@@ -152,6 +221,25 @@ nnoremap <C-L> :nohl<CR><C-L>
 
 "My stuff
 
+" 256 color
+set t_Co=256
+
+" ???
+let g:solarized_termcolors=256
+
+" For line wrap
+set showbreak=↪
+
+" Apparently Ex Mode is a bad thing
+nnoremap Q <nop>
+
+"Autoload .vimrc if it changes
+augroup reload_vimrc " {
+    autocmd!
+    autocmd BufWritePost $MYVIMRC source $MYVIMRC
+augroup END " }
+
+
 "I need to find a better color scheme...
 colorscheme desert
 set background=dark
@@ -167,5 +255,5 @@ set background=dark
 "
 "
   " For python files (AI) set tabstop=2 and expandtab
-autocmd BufNewFile,BufRead *.py set tabstop=2
+autocmd BufNewFile,BufRead *.py set tabstop=3
 autocmd BufNewFile,BufRead *.py set et
