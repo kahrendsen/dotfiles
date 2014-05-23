@@ -29,6 +29,13 @@ shopt -s extglob       # Necessary for programmable completion.
 shopt -s dirspell
 
 
+export HISTFILESIZE=500000
+export HISTSIZE=100000
 
 
+. /usr/share/autojump/autojump.sh
 
+
+function http() {
+    curl http://httpcode.info/"$1"
+}
