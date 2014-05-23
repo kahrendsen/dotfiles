@@ -36,6 +36,21 @@ export HISTSIZE=100000
 . /usr/share/autojump/autojump.sh
 
 
+
+
 function http() {
     curl http://httpcode.info/"$1"
+}
+
+function up {
+    if [ $# -eq 0 ]; then
+    	cd ..
+    else
+    	count=0
+    	while [[ count -lt $1 ]]
+    	do
+    		cd ..
+    		count+=1
+    	done
+    fi
 }
