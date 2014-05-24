@@ -10,6 +10,7 @@ source ~/.bashrc
 #Kill CapsLock
 (dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys
 
+
 #Don't do any fancy network stuff if simple is active
 if [ "$1" = "s" ];
 then

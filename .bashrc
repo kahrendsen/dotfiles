@@ -152,7 +152,7 @@ function git_branch_ps1{
         echo 'git status' | grep "nothing to commit" > /dev/null 2>&1;
         if[ "$?" -eq "0" ]; then
             #Nothing to commit
-            echo "'$Green'
+            echo "$Green
 
 }
 
