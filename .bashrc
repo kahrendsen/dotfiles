@@ -151,7 +151,7 @@ function git_branch_ps1{
     #This'll just echo the appropriate string for inserting the current git branch in the correct color
     
     #Shows a % if there are untracked files, helps with forgetting to add things
-    GIT_PS1_SHOWUNTRACKEDFILES=1
+    #GIT_PS1_SHOWUNTRACKEDFILES=1
 
     #are we in a branch at all?
     git branch &>/dev/null;
