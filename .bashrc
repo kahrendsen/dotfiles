@@ -318,7 +318,12 @@ function ezkey()
 
 }
 
-
+#Hopefully will automatically execute the last line of the stderr to be printed
+#Useful for "X, not installed, type sudo apt-get to install"
+function doit()
+{
+    eval $(!! 2>&1 >/dev/null | tail -l )
+}
 
 
 
