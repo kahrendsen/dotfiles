@@ -116,8 +116,12 @@ shopt -s dirspell
 export HISTFILESIZE=500000
 export HISTSIZE=100000
 
-
+#load autojump
 . /usr/share/autojump/autojump.sh
+
+#attempt to load git completion scripts
+source ~/.git-prompt.sh
+source ~/.git-completion.bash
 
 
 function set_prompt{
@@ -145,6 +149,10 @@ fi)'
 function git_branch_ps1{
     #We're gonna try to make this shit readable if it kills us.
     #This'll just echo the appropriate string for inserting the current git branch in the correct color
+    
+    #Shows a % if there are untracked files, helps with forgetting to add things
+    GIT_PS1_SHOWUNTRACKEDFILES=1
+
     #are we in a branch at all?
     git branch &>/dev/null;
     if[ $? -eq 0 ]; then
@@ -152,7 +160,12 @@ function git_branch_ps1{
         echo 'git status' | grep "nothing to commit" > /dev/null 2>&1;
         if[ "$?" -eq "0" ]; then
             #Nothing to commit
-            echo "$Green
+            echo '$Green$(__git_ps1 "(%s)")$Color_Off'
+        else
+            #uncommitted changes
+            echo '$Red$(__git_ps1 "{%s}")$Color_Off'
+        fi
+    fi
 
 }
 

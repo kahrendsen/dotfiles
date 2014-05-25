@@ -32,12 +32,12 @@ gem install bropages
 apt-get install most && update-alternatives --set pager /usr/bin/most
 
 #get git completion scripts
-wget -O ~/git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
-wget -O ~/git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
 
 #Go through all of the color schemes for popular terminal emulators and try to copy the correct files to the correct places
 #Those that don't match the current terminal emulator should simply fail. I may pipe the errors to dev/null later
-#iTerm2 needs to be set manually
+#iTerm2 needs to be set manually, the file to import is in the git repo
 
 #xfce-terminal
 cp terminalrc ~/.config/Terminal/terminalrc
