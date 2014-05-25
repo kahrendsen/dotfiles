@@ -2,7 +2,7 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-#256 Color
+#256 Color, i guess only works for xterm?
 if [ -e /usr/share/terminfo/x/xterm-256color ]; then
         export TERM='xterm-256color'
 else
@@ -89,7 +89,7 @@ On_IWhite="\[\033[0;107m\]"   # White
 Time12h="\T"
 Time12a="\@"
 PathShort="\w"
-PathFull="\W"
+#PathFull="\W" misleading?
 NewLine="\n"
 Jobs="\j"
 
@@ -120,38 +120,46 @@ export HISTSIZE=100000
 . /usr/share/autojump/autojump.sh
 
 #attempt to load git completion scripts
+if [[ -f "~/.git-prompt.sh" ]]; then else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh fi
+if [[ -f "~/.git-completion.bash" ]]; then else wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash fi
 source ~/.git-prompt.sh
 source ~/.git-completion.bash
 
 
 function set_prompt{
 
-    local last_command=$? # Must come first!
-    rootCol=id -u -eq "0" ? "$BRed" : "$BBlue"
+    #We're gonna try to make this shit readable if it kills us.
 
-    export PS1=$IBlack$Time12h$Color_Off'$(git branch &>/dev/null;\
-    if [ $? -eq 0 ]; then \
-        echo "$(echo `git status` | grep "nothing to commit" > /dev/null 2>&1; \
-        if [ "$?" -eq "0" ]; then \
-            # @4 - Clean repository - nothing to commit
-            echo "'$Green'"$(__git_ps1 " (%s)"); \
-        else \
-            # @5 - Changes to working tree
-            echo "'$IRed'"$(__git_ps1 " {%s}"); \
-        fi) '$BYellow$PathShort$Color_Off'\$ "; \
-else \
-  # @2 - Prompt when not in GIT repo
-  echo " '$$("$PathShort$Color_Off'\$ "; \
-fi)'
+    local last_command=$? # Must come first!
+    local rootCol=if [[ id -u -eq "0" ]]; then "$BRed" else "$BCyan" fi
+
+    PS1=""
+
+    #Time stamp
+    PS1+="$IBlack$Time12h$Color_Off "
+    #Status of last command
+    local happy=":D"
+    local sad="D:"
+    PS1+=$(if [[ $last_command -eq 0 ]]; then echo "$Green$happy$Color_Off " else echo "$Red$sad$Color_Off " fi)
+    #name@machine if ssh'd
+    local ssh_var = "ssh:\u@\h "
+    PS1+=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_far$Color_Off " else echo "" fi)
+    #Working directory
+    PS1+="$rootCol$PathShort$Color_Off "
+    #Git branch
+    PS1+=$(git_branch_ps1)
+    #newline
+    PS1+="$NewLine"
+    #Finally, $ or #
+    PS1+="\$"
+
 }
-#'
 
 function git_branch_ps1{
-    #We're gonna try to make this shit readable if it kills us.
     #This'll just echo the appropriate string for inserting the current git branch in the correct color
     
     #Shows a % if there are untracked files, helps with forgetting to add things
-    #GIT_PS1_SHOWUNTRACKEDFILES=1
+    GIT_PS1_SHOWUNTRACKEDFILES=1
 
     #are we in a branch at all?
     git branch &>/dev/null;
