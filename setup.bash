@@ -68,9 +68,13 @@ wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/
 $installer install autojump || echo "Couldn't install autojump"
 
 #install htop
-$installer install htop
+$installer install htop || echo "Couldn't install htop"
 
-#install 
+#install ncdu
+$installer install ncdu || echo "Couldn't install ncdu"
+
+#install xclip
+$installer install xclip || echo "Couldn't install xclip"
 
 #Go through all of the color schemes for popular terminal emulators and try to copy the correct files to the correct places
 #Those that don't match the current terminal emulator should simply fail. I may pipe the errors to dev/null later

@@ -120,8 +120,8 @@ export HISTSIZE=100000
 . /usr/share/autojump/autojump.sh
 
 #attempt to load git completion scripts
-if [[ -f "~/.git-prompt.sh" ]]; then else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > /dev/null fi
-if [[ -f "~/.git-completion.bash" ]]; then else wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > /dev/null fi
+if [[ -f "~/.git-prompt.sh" ]]; then true else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > /dev/null; fi
+if [[ -f "~/.git-completion.bash" ]]; then true else wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > /dev/null; fi
 source ~/.git-prompt.sh
 source ~/.git-completion.bash
 
@@ -135,7 +135,7 @@ function set_prompt{
     #We're gonna try to make this shit readable if it kills us.
 
     local last_command=$? # Must come first!
-    local rootCol=if [[ id -u -eq "0" ]]; then "$BRed" else "$BCyan" fi
+    local rootCol=if [[ id -u -eq "0" ]]; then $(echo "$BRed"); else $(echo "$BCyan"); fi
 
     PS1=""
 
@@ -144,10 +144,10 @@ function set_prompt{
     #Status of last command
     local happy=":D"
     local sad="D:"
-    PS1+=$(if [[ $last_command -eq 0 ]]; then echo "$Green$happy$Color_Off " else echo "$Red$sad$Color_Off " fi)
+    PS1+=$(if [[ $last_command -eq 0 ]]; then echo "$Green$happy$Color_Off " else echo "$Red$sad$Color_Off "; fi)
     #name@machine if ssh'd
     local ssh_var = "ssh:\u@\h "
-    PS1+=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_far$Color_Off " else echo "" fi)
+    PS1+=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_far$Color_Off " else echo ""; fi)
     #Working directory
     PS1+="$rootCol$PathShort$Color_Off "
     #Git branch
@@ -155,7 +155,7 @@ function set_prompt{
     #newline
     PS1+="$NewLine"
     #Finally, $ or #
-    PS1+="\$"
+    PS1+='\$'
 
 }
 
@@ -175,8 +175,8 @@ function git_branch_ps1{
             echo '$Green$(__git_ps1 "(%s)")$Color_Off'
         else
             #uncommitted changes
-            echo '$Red$(__git_ps1 "{%s}")$Color_Off'
-        fi
+            echo '$Red$(__git_ps1 "{%s}")$Color_Off';
+        fi;
     fi
 
 }
@@ -195,7 +195,7 @@ function up {
     	do
     		cd ..
     		count+=1
-    	done
+    	done;
     fi
 }
 
@@ -255,7 +255,7 @@ function extract()      # Handy Extract Program
             *)           echo "'$1' cannot be extracted via >extract<" ;;
         esac
     else
-        echo "'$1' is not a valid file!"
+        echo "'$1' is not a valid file!";
     fi
 }
 
@@ -305,13 +305,27 @@ function repeat()       # Repeat n times command.
     done
 }
 
+#Automate the slightly irritating process to get RSA keys onto GitHub.
+#Note if I get this the way I'm hoping, it'll probably be pretty unsafe since I'm lazy about passphrases
+function ezkey() 
+{
+    pushd $(pwd)
+    cd ~/.ssh
+    ssh-keygen -A
+    ssh-add id_rsa
+    xclip -sel clip < ~/.ssh/id_rsa.pub
+    firefox https://github.com/settings/ssh
+
+}
+
 
 
 
 
 #Stuff to print out at the beginning of the session
 echo "$(date \"%A %B %d %Y @ %r\")"
-echo "$(id -un)@$(hostname)"
+echo "$(id -un)@$(hostname)\n\n"
+cowsay -f meow "Meow."
 
 
 
