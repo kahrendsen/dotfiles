@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 #A setup file for making the environment the way I like it. I kinda-sorta made it cross-platform-ish.
 #I hope for it to work on all flavors of Debian, Fedora, and OSX/Darwin. Maybe I will add arch and Cygwin later. I think openSUSE is RPM based so maybe those are covered too
@@ -17,7 +17,7 @@ source ~/.bashrc
 (dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys
 
 #make sure bashrc loads in login shells too
-echo "source ~/.bashrc" >>
+echo "source ~/.bashrc" >> ~/.bash_profile
 
 
 #Don't do any fancy network stuff if simple is active
@@ -52,7 +52,8 @@ vim +PluginInstall +qall || echo "Couldn't install vim plugins"
 
 #Install bro because I'm a noob
 $installer install rubygems || echo "Couldn't install rubygems"
-gem install bropages || echo "Couldn't install bro"
+sudo gem install bropages || echo "Couldn't install bro"
+sudo gem install rake || echo "Couldn't install rake"
 
 #install most and set as default more, should color man pages and stuff
 $installer install most && update-alternatives --set pager /usr/bin/most || echo "Could not install most"
@@ -94,8 +95,8 @@ cp SolarizedDark.colorscheme ~/.kde/share/apps/konsole || echo "Not Konsole"
 
 
 usedSpaceEnd=$(df --total | grep total | awk 'END{print $3;}')
-installSpace=$usedSpaceEnd-$usedSpaceStart
-kilo=$installSpace%1024
-mega=$installSpace/1024
-giga=$mega/1024
+installSpace=$(( $usedSpaceEnd-$usedSpaceStart ))
+kilo=$(( $installSpace%1024 ))
+mega=$(( $installSpace/1024 ))
+giga=$(( $mega/1024 ))
 echo "Installation used $giga GB, $mega MB, $kilo KB"

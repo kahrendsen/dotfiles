@@ -115,13 +115,14 @@ shopt -s dirspell
 
 export HISTFILESIZE=500000
 export HISTSIZE=100000
+export PATH="$PATH:~/.cabal/bin"
 
 #load autojump
 . /usr/share/autojump/autojump.sh
 
 #attempt to load git completion scripts
-if [[ -f "~/.git-prompt.sh" ]]; then true else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > /dev/null; fi
-if [[ -f "~/.git-completion.bash" ]]; then true else wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > /dev/null; fi
+if [[ -f ~/.git-prompt.sh ]]; then true else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > /dev/null; fi
+if [[ -f ~/.git-completion.bash ]]; then true else wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > /dev/null; fi
 source ~/.git-prompt.sh
 source ~/.git-completion.bash
 
@@ -130,12 +131,12 @@ source ~/.git-completion.bash
 PROMPT_COMMAND="set_prompt"
 
 
-function set_prompt{
+function set_prompt {
 
     #We're gonna try to make this shit readable if it kills us.
 
     local last_command=$? # Must come first!
-    local rootCol=if [[ id -u -eq "0" ]]; then $(echo "$BRed"); else $(echo "$BCyan"); fi
+    local rootCol=$(if [[ $(id -u) -eq "0" ]]; then echo "$BRed"; else echo "$BCyan"; fi)
 
     PS1=""
 
@@ -146,7 +147,7 @@ function set_prompt{
     local sad="D:"
     PS1+=$(if [[ $last_command -eq 0 ]]; then echo "$Green$happy$Color_Off " else echo "$Red$sad$Color_Off "; fi)
     #name@machine if ssh'd
-    local ssh_var = "ssh:\u@\h "
+    local ssh_var="ssh:\u@\h "
     PS1+=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_far$Color_Off " else echo ""; fi)
     #Working directory
     PS1+="$rootCol$PathShort$Color_Off "
@@ -159,7 +160,7 @@ function set_prompt{
 
 }
 
-function git_branch_ps1{
+function git_branch_ps1 {
     #This'll just echo the appropriate string for inserting the current git branch in the correct color
     
     #Shows a % if there are untracked files, helps with forgetting to add things
@@ -167,10 +168,10 @@ function git_branch_ps1{
 
     #are we in a branch at all?
     git branch &>/dev/null;
-    if[ $? -eq 0 ]; then
+    if [ $? -eq 0 ]; then
         #we're in a branch. Do we have uncommited changes?
         echo 'git status' | grep "nothing to commit" > /dev/null 2>&1;
-        if[ "$?" -eq "0" ]; then
+        if [ "$?" -eq "0" ]; then
             #Nothing to commit
             echo '$Green$(__git_ps1 "(%s)")$Color_Off'
         else
@@ -309,7 +310,7 @@ function repeat()       # Repeat n times command.
 #Note if I get this the way I'm hoping, it'll probably be pretty unsafe since I'm lazy about passphrases
 function ezkey() 
 {
-    pushd $(pwd)
+    pushd "$(pwd)"
     cd ~/.ssh
     ssh-keygen -A
     ssh-add id_rsa
@@ -322,14 +323,14 @@ function ezkey()
 #Useful for "X, not installed, type sudo apt-get to install"
 function doit()
 {
-    eval $(!! 2>&1 >/dev/null | tail -l )
+    eval "$(!! 2>&1 >/dev/null | tail -1 )"
 }
 
 
 
 #Stuff to print out at the beginning of the session
 echo "$(date \"%A %B %d %Y @ %r\")"
-echo "$(id -un)@$(hostname)\n\n"
+printf "$(id -un)@$(hostname)\n\n"
 cowsay -f meow "Meow."
 
 
