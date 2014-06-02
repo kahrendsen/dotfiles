@@ -335,4 +335,4 @@ cowsay -f meow "Meow."
 
 
 
-#Maybe just shoulda used this... https://github.com/nojhan/liquidprompt
+#Maybe just shoulda used this... https://github.com/nojhan/liquidpromptalias l=ls

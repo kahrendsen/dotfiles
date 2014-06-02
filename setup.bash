@@ -15,6 +15,7 @@ source ~/.bashrc
 
 #Kill CapsLock
 (dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys
+#Maybe kill mouse accel too?
 
 #make sure bashrc loads in login shells too
 echo "source ~/.bashrc" >> ~/.bash_profile
