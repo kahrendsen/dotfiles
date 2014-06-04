@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 #A setup file for making the environment the way I like it. I kinda-sorta made it cross-platform-ish.
 #I hope for it to work on all flavors of Debian, Fedora, and OSX/Darwin. Maybe I will add arch and Cygwin later. I think openSUSE is RPM based so maybe those are covered too
@@ -63,8 +63,8 @@ $installer install most && update-alternatives --set pager /usr/bin/most || echo
 $installer install wget
 
 #get git completion scripts
-wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh || echo "Couldn't fetch git-prompt.sh"
-wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash || echo "Couldn't fetch git-completion.bash"
+wget -O --no-check-certificate ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh || echo "Couldn't fetch git-prompt.sh"
+wget -O --no-check-certificate ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash || echo "Couldn't fetch git-completion.bash"
 
 #install autojump
 $installer install autojump || echo "Couldn't install autojump"

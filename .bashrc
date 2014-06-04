@@ -336,3 +336,5 @@ cowsay -f meow "Meow."
 
 
 #Maybe just shoulda used this... https://github.com/nojhan/liquidpromptalias l=ls
+
+alias l='ls'
