@@ -13,6 +13,10 @@ ln .bashrc ~/
 #use the new .bashrc
 source ~/.bashrc
 
+#copy git stuff
+cp .git-prompt.sh ~
+cp .git-completion.bash ~
+
 #Kill CapsLock
 (dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys
 #Maybe kill mouse accel too?

@@ -118,13 +118,13 @@ export HISTSIZE=100000
 export PATH="$PATH:~/.cabal/bin"
 
 #load autojump
-. /usr/share/autojump/autojump.sh
+. /usr/share/autojump/autojump.sh 2&> /dev/null
 
 #attempt to load git completion scripts
-if [[ -f ~/.git-prompt.sh ]]; then true else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > /dev/null; fi
-if [[ -f ~/.git-completion.bash ]]; then true else wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > /dev/null; fi
-source ~/.git-prompt.sh
-source ~/.git-completion.bash
+#if [[ -f ~/.git-prompt.sh ]]; then true else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > /dev/null; fi
+#if [[ -f ~/.git-completion.bash ]]; then true else wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > /dev/null; fi
+source ~/git-completion.bash
+source ~/git-prompt.sh
 
 #This is executed every time we're about to show a prompt, so the sanest way to build PS1 is to use this
 #Otherwise we get totally unreadable strings from hell
@@ -221,7 +221,7 @@ alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
 
 function soffice() { command soffice "$@" & }
-function firefox() { command firefox "$@" & }
+function firefox() { command /export/apps/xtools/ "$@" & }
 function xpdf() { command xpdf "$@" & }
 
 
@@ -315,6 +315,7 @@ function ezkey()
     ssh-keygen -A
     ssh-add id_rsa
     xclip -sel clip < ~/.ssh/id_rsa.pub
+    ~/.ssh/id_rsa.pub | echo
     firefox https://github.com/settings/ssh
 
 }
@@ -326,10 +327,21 @@ function doit()
     eval "$(!! 2>&1 >/dev/null | tail -1 )"
 }
 
+function killport()
+{
+    #pid=$(lsof -i:$1 -t); 
+    #kill $pid || kill -s 9 $pid;
+    #lsof -i tcp:${PORT_NUMBER} | awk 'NR!=1 {print $2}' | xargs kill
+    PID=$(lsof -i:$1 | grep 'username' | awk '{print $2}')
+    if [ $PID ]; then
+        kill $PID;
+    fi
+}
+
 
 
 #Stuff to print out at the beginning of the session
-echo "$(date \"%A %B %d %Y @ %r\")"
+echo "$(date +"%A %B %d %Y @ %r")"
 printf "$(id -un)@$(hostname)\n\n"
 cowsay -f meow "Meow."
 
