@@ -8,19 +8,19 @@
 
 
 # make the hard links so we don't have to move them back and forth to commit/push/pull
-ln .vimrc ~/
-ln .bashrc ~/
+ln $(dirname $0)/.vimrc ~/ &> /dev/null
+ln $(dirname $0)/.bashrc ~/ &> /dev/null
 
 #use the new .bashrc
 source ~/.bashrc
 
 #copy git stuff
-cp $(dirname $0)/git-prompt.sh ~
-cp $(dirname $0)/git-completion.bash ~
+cp $(dirname $0)/git-prompt.sh ~ &> /dev/null
+cp $(dirname $0)/git-completion.bash ~ &> /dev/null
 
 #Kill CapsLock
 #currently doesn't work on mac
-((dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys) > /dev/null
+((dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys) &> /dev/null
 #Maybe kill mouse accel too?
 
 #make sure bashrc loads in login shells too
@@ -36,14 +36,14 @@ fi
 #note how much space we have now so we know how much we used when we're through
 #hopefully this helps figure out if I can use this on, say, a Raspberry Pi
 #NEEDS MAC ALT
-usedSpaceStart=$(df --total | grep total | awk 'END{print $3;}')
+usedSpaceStart=$(df --total 2> /dev/null || df 2> /dev/null | grep total | awk 'END{print $3;}')
 
 #major package managers: aptitude - debian, yum - fedora, homebrew - OSX, 
 installer="ERROR" #somehow didn't have aptitude or yum and we're not on OSX, or something failed
 #If we find yum, we also try to set two additional repos, because RHEL's defaults are kinda sucky. Not a big deal if this fails. Hopefully Fedora won't need this
-which yum && installer="sudo yum -y " && sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm && sudo rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
-which aptitude && installer="sudo aptitude -y "
-uname | grep -i darwin && sudo ruby -e homebrew_install.rb && installer="brew " && brew update
+which yum &> /dev/null && installer="sudo yum -y " && sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm &> /dev/null; sudo rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm &> /dev/null
+which aptitude &> /dev/null && installer="sudo aptitude -y "
+uname &> /dev/null | grep -i darwin && ruby $(dirname $0)/homebrew_install.rb; installer="brew " && brew update
 
 #make sure everything is up to date, unfortunately have to use upgrade cuz homebrew
 $installer upgrade
@@ -53,7 +53,7 @@ git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2>&1
 #git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2>&1 || { echo >&2 "Git not installed, attempting to install..."; sudo apt-get -y install git-core; git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim }
 
 #make sure vim is installed
-$installer install vim || echo "Couldn't install Vim"
+$installer install vim &> /dev/null || echo "Couldn't install Vim"
 
 #Install plugins
 vim +PluginInstall +qall || echo "Couldn't install vim plugins"
@@ -66,7 +66,7 @@ sudo gem install rake || echo "Couldn't install rake"
 #install most and set as default more, should color man pages and stuff
 #NEEDS MAC ALT
 #Also shouldn't assume it's in /usr/bin/most, who knows where brew puts it
-$installer install most && update-alternatives --set pager /usr/bin/most || echo "Could not install most"
+$installer install most || echo "Could not install most"
 
 #make sure wget is installed
 #$installer install wget
@@ -92,21 +92,21 @@ $installer install xclip || echo "Couldn't install xclip"
 #iTerm2 needs to be set manually, the file to import is in the git repo
 
 #xfce-terminal
-cp terminalrc ~/.config/Terminal/terminalrc || echo "Not Xfce"
+cp terminalrc ~/.config/Terminal/terminalrc &> /dev/null || echo "Not Xfce"
 
 #gnome
-rake set scheme=solarized_dark || echo "Not Gnome"
+rake set scheme=solarized_dark &> /dev/null || echo "Not Gnome"
 
 #xterm
-which xterm && cp .Xresources && xrdb -merge ~/.Xresources~ || echo "Not xterm"
+(which xterm && cp .Xresources && xrdb -merge ~/.Xresources~) &> /dev/null || echo "Not xterm"
 
 #Konsole
-cp SolarizedDark.colorscheme ~/.kde/share/apps/konsole || echo "Not Konsole"
+cp SolarizedDark.colorscheme ~/.kde/share/apps/konsole &> /dev/null || echo "Not Konsole"
 
 
-usedSpaceEnd=$(df --total | grep total | awk 'END{print $3;}')
-installSpace=$(( $usedSpaceEnd-$usedSpaceStart ))
-kilo=$(( $installSpace%1024 ))
-mega=$(( $installSpace/1024 ))
-giga=$(( $mega/1024 ))
+usedSpaceEnd=$(df --total &> /dev/null || df &> /dev/null | grep total | awk 'END{print $3;}')
+installSpace=$(($(usedSpaceEnd)-$(usedSpaceStart)))
+kilo=$(($(installSpace)%1024))
+mega=$(($(installSpace)/1024))
+giga=$(($(mega)/1024))
 echo "Installation used $giga GB, $mega MB, $kilo KB"
