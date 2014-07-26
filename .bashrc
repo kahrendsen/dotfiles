@@ -118,13 +118,13 @@ export HISTSIZE=100000
 export PATH="$PATH:~/.cabal/bin"
 
 #load autojump
-. /usr/share/autojump/autojump.sh
+. /usr/share/autojump/autojump.sh 2&> /dev/null
 
 #attempt to load git completion scripts
-if [[ -f ~/.git-prompt.sh ]]; then true else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > /dev/null; fi
-if [[ -f ~/.git-completion.bash ]]; then true else wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > /dev/null; fi
-source ~/.git-prompt.sh
-source ~/.git-completion.bash
+#if [[ -f ~/.git-prompt.sh ]]; then true else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > /dev/null; fi
+#if [[ -f ~/.git-completion.bash ]]; then true else wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > /dev/null; fi
+source ~/git-completion.bash
+source ~/git-prompt.sh
 
 #This is executed every time we're about to show a prompt, so the sanest way to build PS1 is to use this
 #Otherwise we get totally unreadable strings from hell
@@ -141,14 +141,14 @@ function set_prompt {
     PS1=""
 
     #Time stamp
-    PS1+="$IBlack$Time12h$Color_Off "
+    PS1+="$Blue$Time12h$Color_Off "
     #Status of last command
     local happy=":D"
     local sad="D:"
     PS1+=$(if [[ $last_command -eq 0 ]]; then echo "$Green$happy$Color_Off "; else echo "$Red$sad$Color_Off "; fi)
     #name@machine if ssh'd
     local ssh_var="ssh:\u@\h "
-    PS1+=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_far$Color_Off " else echo ""; fi)
+    PS1+=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_far$Color_Off "; else echo ""; fi)
     #Working directory
     PS1+="$rootCol$PathShort$Color_Off "
     #Git branch
@@ -173,12 +173,12 @@ function git_branch_ps1 {
         echo 'git status' | grep "nothing to commit" > /dev/null 2>&1;
         if [ "$?" -eq "0" ]; then
             #Nothing to commit
-            echo '$Green$(__git_ps1 "(%s)")$Color_Off'
+            echo "$Green$(__git_ps1 "(%s)")$Color_Off";
         else
             #uncommitted changes
-            echo '$Red$(__git_ps1 "{%s}")$Color_Off';
+            echo "$Red$(__git_ps1 "{%s}")$Color_Off";
         fi;
-    fi
+    fi;
 
 }
 
@@ -189,7 +189,7 @@ function http() {
 
 function up {
     if [ $# -eq 0 ]; then
-    	cd ..
+    	cd ..;
     else
     	count=0
     	while [[ count -lt $1 ]]
@@ -197,7 +197,7 @@ function up {
     		cd ..
     		count+=1
     	done;
-    fi
+    fi;
 }
 
 alias rm=gvfs-trash
@@ -221,7 +221,7 @@ alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
 
 function soffice() { command soffice "$@" & }
-function firefox() { command firefox "$@" & }
+function firefox() { command /export/apps/xtools/ "$@" & }
 function xpdf() { command xpdf "$@" & }
 
 
@@ -315,6 +315,7 @@ function ezkey()
     ssh-keygen -A
     ssh-add id_rsa
     xclip -sel clip < ~/.ssh/id_rsa.pub
+    ~/.ssh/id_rsa.pub | echo
     firefox https://github.com/settings/ssh
 
 }
@@ -326,13 +327,26 @@ function doit()
     eval "$(!! 2>&1 >/dev/null | tail -1 )"
 }
 
+function killport()
+{
+    #pid=$(lsof -i:$1 -t); 
+    #kill $pid || kill -s 9 $pid;
+    #lsof -i tcp:${PORT_NUMBER} | awk 'NR!=1 {print $2}' | xargs kill
+    PID=$(lsof -i:$1 | grep 'username' | awk '{print $2}')
+    if [ $PID ]; then
+        kill $PID;
+    fi
+}
+
 
 
 #Stuff to print out at the beginning of the session
-echo "$(date \"%A %B %d %Y @ %r\")"
+echo "$(date +"%A %B %d %Y @ %r")"
 printf "$(id -un)@$(hostname)\n\n"
 cowsay -f meow "Meow."
 
 
 
 #Maybe just shoulda used this... https://github.com/nojhan/liquidprompt
+
+alias l='ls'
