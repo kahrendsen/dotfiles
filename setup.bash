@@ -4,6 +4,7 @@
 #I hope for it to work on all flavors of Debian, Fedora, and OSX/Darwin. Maybe I will add arch and Cygwin later. I think openSUSE is RPM based so maybe those are covered too
 #Terminal emulator is an issue as well, this should hopefully support Gnome shell, Konsole, Xfce terminal, xterm, and iTerm2. Maybe I'll add Cygwin one day
 #Will probably never add Gentoo or Slackware
+#Everything needs to be updated with BSD alternatives to be usable on mac
 
 
 # make the hard links so we don't have to move them back and forth to commit/push/pull
@@ -14,11 +15,12 @@ ln .bashrc ~/
 source ~/.bashrc
 
 #copy git stuff
-cp .git-prompt.sh ~
-cp .git-completion.bash ~
+cp $(dirname $0)/git-prompt.sh ~
+cp $(dirname $0)/git-completion.bash ~
 
 #Kill CapsLock
-(dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys
+#currently doesn't work on mac
+((dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys) > /dev/null
 #Maybe kill mouse accel too?
 
 #make sure bashrc loads in login shells too
@@ -33,6 +35,7 @@ fi
 
 #note how much space we have now so we know how much we used when we're through
 #hopefully this helps figure out if I can use this on, say, a Raspberry Pi
+#NEEDS MAC ALT
 usedSpaceStart=$(df --total | grep total | awk 'END{print $3;}')
 
 #major package managers: aptitude - debian, yum - fedora, homebrew - OSX, 
@@ -40,7 +43,7 @@ installer="ERROR" #somehow didn't have aptitude or yum and we're not on OSX, or 
 #If we find yum, we also try to set two additional repos, because RHEL's defaults are kinda sucky. Not a big deal if this fails. Hopefully Fedora won't need this
 which yum && installer="sudo yum -y " && sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm && sudo rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
 which aptitude && installer="sudo aptitude -y "
-uname | grep -i darwin && sudo ruby -e homebrew_install.rb && installer="homebrew " && brew update
+uname | grep -i darwin && sudo ruby -e homebrew_install.rb && installer="brew " && brew update
 
 #make sure everything is up to date, unfortunately have to use upgrade cuz homebrew
 $installer upgrade
@@ -61,14 +64,16 @@ sudo gem install bropages || echo "Couldn't install bro"
 sudo gem install rake || echo "Couldn't install rake"
 
 #install most and set as default more, should color man pages and stuff
+#NEEDS MAC ALT
+#Also shouldn't assume it's in /usr/bin/most, who knows where brew puts it
 $installer install most && update-alternatives --set pager /usr/bin/most || echo "Could not install most"
 
 #make sure wget is installed
-$installer install wget
+#$installer install wget
 
 #get git completion scripts
-wget -O --no-check-certificate ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh || echo "Couldn't fetch git-prompt.sh"
-wget -O --no-check-certificate ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash || echo "Couldn't fetch git-completion.bash"
+#wget -O --no-check-certificate ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh || echo "Couldn't fetch git-prompt.sh"
+#wget -O --no-check-certificate ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash || echo "Couldn't fetch git-completion.bash"
 
 #install autojump
 $installer install autojump || echo "Couldn't install autojump"
