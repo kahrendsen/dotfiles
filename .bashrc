@@ -145,7 +145,7 @@ function set_prompt {
     #Status of last command
     local happy=":D"
     local sad="D:"
-    PS1+=$(if [[ $last_command -eq 0 ]]; then echo "$Green$happy$Color_Off " else echo "$Red$sad$Color_Off "; fi)
+    PS1+=$(if [[ $last_command -eq 0 ]]; then echo "$Green$happy$Color_Off "; else echo "$Red$sad$Color_Off "; fi)
     #name@machine if ssh'd
     local ssh_var="ssh:\u@\h "
     PS1+=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_far$Color_Off " else echo ""; fi)

@@ -95,8 +95,8 @@ cp SolarizedDark.colorscheme ~/.kde/share/apps/konsole || echo "Not Konsole"
 
 
 usedSpaceEnd=$(df --total | grep total | awk 'END{print $3;}')
-installSpace=$(( $usedSpaceEnd-$usedSpaceStart ))
-kilo=$(( $installSpace%1024 ))
-mega=$(( $installSpace/1024 ))
-giga=$(( $mega/1024 ))
+installSpace=$(( $usedSpaceEnd - $usedSpaceStart ))
+kilo=$(( $installSpace % 1024 ))
+mega=$(( $installSpace / 1024 ))
+giga=$(( $mega / 1024 ))
 echo "Installation used $giga GB, $mega MB, $kilo KB"
