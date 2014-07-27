@@ -123,8 +123,8 @@ export PATH="$PATH:~/.cabal/bin"
 #attempt to load git completion scripts
 #if [[ -f ~/.git-prompt.sh ]]; then true else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > /dev/null; fi
 #if [[ -f ~/.git-completion.bash ]]; then true else wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > /dev/null; fi
-source ~/git-completion.bash
-source ~/git-prompt.sh
+source ~/git-completion.bash &> /dev/null
+source ~/git-prompt.sh &> /dev/null
 
 #This is executed every time we're about to show a prompt, so the sanest way to build PS1 is to use this
 #Otherwise we get totally unreadable strings from hell
@@ -195,34 +195,37 @@ function up {
     	while [[ count -lt $1 ]]
     	do
     		cd ..
-    		count+=1
+			(( count+=1 ))
     	done;
     fi;
 }
 
-alias rm=gvfs-trash
-alias grep='grep --color=auto'
-alias ll='ls -Alv --group-directories-first'
-alias ls='ls -h --color=auto' #Always colorize and use sensible sizes
-alias la='ls -A'           #  Show hidden files
-alias lx='ls -lXB'         #  Sort by extension.
-alias lk='ls -lSr'         #  Sort by size, biggest last.
-alias lt='ls -ltr'         #  Sort by date, most recent last.
-alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
-alias lu='ls -ltur'        #  Sort by/show access time,most recent last.
-alias lm='ll |most'        #  Pipe through 'most'
-alias lr='ll -R'           #  Recursive ls.
-alias tree='tree -Csh'    #  Nice alternative to 'recursive ls' ...
-alias mkdir='mkdir -p'
+
+
+#alias rm=gvfs-trash
+alias grep='grep --color=auto' #MAC OK?
+alias ll='ls -Alv' #MAC OK
+ls -h --color=auto &> /dev/null && alias ls='ls -h --color=auto' || alias ls='ls -hG' #Always colorize and use sensible sizes, should now be MAC OK
+alias la='ls -A'           #  Show hidden files, MAC OK
+ls -lXB &> /dev/null && alias lx='ls -lXB'         #  Sort by extension. XB NOT OK, X - File Extension, B - don't list backups
+alias lk='ls -lSr'         #  Sort by size, biggest last. MAC OK
+alias lt='ls -lt'         #  Sort by date, most recent first. MAC OK
+alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.MAC OK
+alias lu='ls -ltur'        #  Sort by/show access time,most recent last.MAC OK
+alias lm='ll |less'        #  Pipe through 'less'MAC OK 
+alias lr='ll -R'           #  Recursive ls. MAC OK
+which tree && alias tree='tree -Csh'    #  Nice alternative to 'recursive ls' ... (MAC OK if tree is installed)
+alias mkdir='mkdir -p' #Make intermediate directories as required, MAC OK
 alias more='most'
 alias less='most'
 # Pretty-print of some PATH variables:
 alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
 
-function soffice() { command soffice "$@" & }
-function firefox() { command /export/apps/xtools/ "$@" & }
-function xpdf() { command xpdf "$@" & }
+#I think most of these are pretty broken
+#function soffice() { command soffice "$@" & }
+function firefox() { firefox "$@" & &> /dev/null || /usr/bin/firefox "$@" & &> /dev/null || open firefox "$@" &> /dev/null }
+#function xpdf() { command xpdf "$@" & }
 
 
 function swap()
@@ -314,10 +317,10 @@ function ezkey()
     cd ~/.ssh
     ssh-keygen -A
     ssh-add id_rsa
-    xclip -sel clip < ~/.ssh/id_rsa.pub
+    which xclip &> /dev/null && xclip -sel clip < ~/.ssh/id_rsa.pub
     ~/.ssh/id_rsa.pub | echo
     firefox https://github.com/settings/ssh
-
+	popd | cd
 }
 
 #Hopefully will automatically execute the last line of the stderr to be printed
@@ -343,7 +346,7 @@ function killport()
 #Stuff to print out at the beginning of the session
 echo "$(date +"%A %B %d %Y @ %r")"
 printf "$(id -un)@$(hostname)\n\n"
-cowsay -f meow "Meow."
+which cowsay && cowsay -f meow "Meow."
 
 
 
