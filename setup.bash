@@ -30,7 +30,7 @@ cp $(dirname $0)/git-completion.bash ~ &> /dev/null
 #Maybe kill mouse accel too?
 
 #make sure bashrc loads in login shells too
-echo "source ~/.bashrc" >> ~/.bash_profile
+grep "source ~/.bashrc" ~/.bash_profile &> /dev/null || echo "source ~/.bashrc" >> ~/.bash_profile
 
 
 #Don't do any fancy network stuff if simple is active
