@@ -170,7 +170,7 @@ function git_branch_ps1 {
     git branch &>/dev/null;
     if [ $? -eq 0 ]; then
         #we're in a branch. Do we have uncommited changes?
-        echo 'git status' | grep "nothing to commit" > /dev/null 2>&1;
+        git status 2> /dev/null | grep "nothing to commit" > /dev/null 2>&1;
         if [ "$?" -eq "0" ]; then
             #Nothing to commit
             echo "$Green$(__git_ps1 "(%s)")$Color_Off";
