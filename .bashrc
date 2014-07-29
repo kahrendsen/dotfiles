@@ -110,7 +110,7 @@ shopt -s histappend histreedit histverify
 #Extended pattern matching features
 shopt -s extglob       # Necessary for programmable completion.
 #Attempt to correct spelling of directory names when word completing if directory doesn't exist
-shopt -s dirspell
+shopt -s dirspell &> /dev/null
 
 
 export HISTFILESIZE=500000
@@ -214,17 +214,18 @@ alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.MAC OK
 alias lu='ls -ltur'        #  Sort by/show access time,most recent last.MAC OK
 alias lm='ll |less'        #  Pipe through 'less'MAC OK 
 alias lr='ll -R'           #  Recursive ls. MAC OK
-which tree && alias tree='tree -Csh'    #  Nice alternative to 'recursive ls' ... (MAC OK if tree is installed)
+which tree &> /dev/null && alias tree='tree -Csh'    #  Nice alternative to 'recursive ls' ... (MAC OK if tree is installed)
 alias mkdir='mkdir -p' #Make intermediate directories as required, MAC OK
 alias more='most'
 alias less='most'
 # Pretty-print of some PATH variables:
 alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
+alias l='ls'
 
 #I think most of these are pretty broken
 #function soffice() { command soffice "$@" & }
-function firefox() { firefox "$@" & &> /dev/null || /usr/bin/firefox "$@" & &> /dev/null || open firefox "$@" &> /dev/null }
+function firefox() { firefox "$@" & &> /dev/null || /usr/bin/firefox "$@" & &> /dev/null || open firefox "$@" &> /dev/null; }
 #function xpdf() { command xpdf "$@" & }
 
 
@@ -346,10 +347,8 @@ function killport()
 #Stuff to print out at the beginning of the session
 echo "$(date +"%A %B %d %Y @ %r")"
 printf "$(id -un)@$(hostname)\n\n"
-which cowsay && cowsay -f meow "Meow."
+which cowsay &> /dev/null && cowsay -f meow "Meow.";
 
 
 
 #Maybe just shoulda used this... https://github.com/nojhan/liquidprompt
-
-alias l='ls'
