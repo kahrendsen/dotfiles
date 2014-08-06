@@ -222,6 +222,8 @@ alias less='most'
 alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
 alias l='ls'
+alias s='ls'
+alias sl='ls'
 
 #I think most of these are pretty broken
 #function soffice() { command soffice "$@" & }
