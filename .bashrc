@@ -352,5 +352,6 @@ printf "$(id -un)@$(hostname)\n\n"
 which cowsay &> /dev/null && cowsay -f meow "Meow.";
 
 
+umask 022
 
 #Maybe just shoulda used this... https://github.com/nojhan/liquidprompt
