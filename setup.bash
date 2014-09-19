@@ -14,8 +14,8 @@ sudo chmod 777 $(dirname $0)/*
 dir=$(dirname $0)
 
 # make the hard links so we don't have to move them back and forth to commit/push/pull
-ln $(dirname $0)/.vimrc ~/ &> /dev/null
-ln $(dirname $0)/.bashrc ~/ &> /dev/null
+ln -i $(dirname $0)/.vimrc ~/ &> /dev/null
+ln -i $(dirname $0)/.bashrc ~/ &> /dev/null
 
 #use the new .bashrc
 source ~/.bashrc
@@ -25,7 +25,7 @@ cp $(dirname $0)/git-prompt.sh ~ &> /dev/null
 cp $(dirname $0)/git-completion.bash ~ &> /dev/null
 
 #Kill CapsLock
-#currently doesn't work on mac
+#currently doesn't work on mac (or at all?)
 ( (dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys) &> /dev/null
 #Maybe kill mouse accel too?
 
