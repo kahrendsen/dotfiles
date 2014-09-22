@@ -344,6 +344,17 @@ function killport()
     fi
 }
 
+function installbin()
+{
+    user=`id -un`;
+    if [ ! -w /usr/local/bin ];
+    then
+        sudo chown -R $ /usr/local/bin;
+    fi
+    cp -ri $user /usr/local/bin;
+
+
+}
 
 
 #Stuff to print out at the beginning of the session
@@ -352,6 +363,6 @@ printf "$(id -un)@$(hostname)\n\n"
 which cowsay &> /dev/null && cowsay -f meow "Meow.";
 
 
-umask 022
+#umask 022
 
 #Maybe just shoulda used this... https://github.com/nojhan/liquidprompt
