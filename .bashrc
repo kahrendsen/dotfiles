@@ -356,6 +356,17 @@ function installbin()
 
 }
 
+function addpath()
+{
+    if [ $# -eq 0 ]
+    then
+        export PATH=$PATH:$(pwd)
+    else
+        export PATH=$PATH:$1
+    fi
+
+}
+
 
 #Stuff to print out at the beginning of the session
 echo "$(date +"%A %B %d %Y @ %r")"
