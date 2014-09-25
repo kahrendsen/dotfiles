@@ -115,7 +115,7 @@ shopt -s dirspell &> /dev/null
 
 export HISTFILESIZE=500000
 export HISTSIZE=100000
-export PATH="$PATH:~/.cabal/bin"
+#export PATH="$PATH:~/.cabal/bin"
 
 #load autojump
 . /usr/share/autojump/autojump.sh 2&> /dev/null
@@ -365,6 +365,11 @@ function addpath()
         export PATH=$PATH:$1
     fi
 
+}
+
+function savepath()
+{
+   echo "export PATH=$PATH" >> ~/.bash_profile
 }
 
 
