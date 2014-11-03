@@ -7,7 +7,7 @@
 #Everything needs to be updated with BSD alternatives to be usable on mac
 
 #Make sure the current folder gives us the right permissions
-sudo chmod 777 $(dirname $0)/*
+sudo chmod 744 $(dirname $0)/*
 
 #Record this script's directory
 #Apparently the thing dirname spits out is sometimes relative, so be careful

@@ -1,6 +1,14 @@
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
+[[ -z "$TMUX" ]] && exec tmux
+
+# TMUX
+if which tmux >/dev/null 2>&1; then
+    #if not inside a tmux session, and if no session is started, start a new session
+    test -z "$TMUX" && (tmux attach || tmux new-session)
+fi
+
 
 #256 Color, i guess only works for xterm?
 if [ -e /usr/share/terminfo/x/xterm-256color ]; then
@@ -217,8 +225,8 @@ alias lm='ll |less'        #  Pipe through 'less'MAC OK
 alias lr='ll -R'           #  Recursive ls. MAC OK
 which tree &> /dev/null && alias tree='tree -Csh'    #  Nice alternative to 'recursive ls' ... (MAC OK if tree is installed)
 alias mkdir='mkdir -p' #Make intermediate directories as required, MAC OK
-alias more='most'
-alias less='most'
+#alias more='most'
+#alias less='most'
 # Pretty-print of some PATH variables:
 alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
@@ -228,7 +236,7 @@ alias sl='ls'
 
 #I think most of these are pretty broken
 #function soffice() { command soffice "$@" & }
-function firefox() { firefox "$@" & &> /dev/null || /usr/bin/firefox "$@" & &> /dev/null || open firefox "$@" &> /dev/null; }
+#function firefox() { firefox "$@" & &> /dev/null || /usr/bin/firefox "$@" & &> /dev/null || open firefox "$@" &> /dev/null; }
 #function xpdf() { command xpdf "$@" & }
 
 
@@ -323,7 +331,7 @@ function ezkey()
     ssh-add id_rsa
     which xclip &> /dev/null && xclip -sel clip < ~/.ssh/id_rsa.pub
     ~/.ssh/id_rsa.pub | echo
-    firefox https://github.com/settings/ssh
+    firefox https://github.com/settings/ssh #should use that default-thing here
 	popd | cd
 }
 
