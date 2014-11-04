@@ -1,4 +1,27 @@
 
+function dvim(){
+    if [ -n "$1" ]
+    then
+        line=0;
+        ty=$(type -t $1)
+        case "$ty" in
+            alias) line=$(grep -Ens -m1 "alias[[:space:]]*(-g)?[[:space:]]*[[:alnum:]]*$1[[:alnum:]]*[[:space:]]*=" ~/.bashrc ~/common.sh ~/.zshrc) ;;
+            function) line=$(grep -Ens -m1 "(function)?[[:space:]]*[[:alnum:]]*$1[[:alnum:]]*[[:space:]]*\(.*\)" ~/.bashrc ~/common.sh ~/.zshrc) ;;
+        esac
+
+        line_num=$(echo "$line" | cut -d: -f2)
+        filename=$(echo "$line" | cut -d: -f1)
+        vim $filename +$line_num
+
+    else
+        vim ~/common.sh
+    fi
+
+
+
+}
+
+
 function http() {
     curl http://httpcode.info/"$1"
 }
