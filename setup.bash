@@ -25,6 +25,7 @@ source ~/.bashrc
 cp $(dirname $0)/git-prompt.sh ~ &> /dev/null
 cp $(dirname $0)/git-completion.bash ~ &> /dev/null
 
+
 #Kill CapsLock
 #currently doesn't work on mac (or at all?)
 ( (dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys) &> /dev/null
@@ -79,6 +80,12 @@ $installer upgrade
 #Try to get Vundle
 git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2>&1 
 #git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2>&1 || { echo >&2 "Git not installed, attempting to install..."; sudo apt-get -y install git-core; git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim }
+
+#install zsh
+$installer install zsh &> /dev/null || echo "Couldn't install zsh"
+
+#set shell to zsh
+sudo chsh $(whoami) -s zsh
 
 #make sure vim is installed
 $installer install vim &> /dev/null || echo "Couldn't install Vim"
