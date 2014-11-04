@@ -137,7 +137,7 @@ source ~/git-prompt.sh &> /dev/null
 #This is executed every time we're about to show a prompt, so the sanest way to build PS1 is to use this
 #Otherwise we get totally unreadable strings from hell
 PROMPT_COMMAND="set_prompt"
-
+#zsh equivilant(sp?) is precmd
 
 function set_prompt {
 
@@ -358,9 +358,10 @@ function installbin()
     user=`id -un`;
     if [ ! -w /usr/local/bin ];
     then
-        sudo chown -R $ /usr/local/bin;
+        sudo chown -R $user /usr/local/bin;
     fi
-    cp -ri $user /usr/local/bin;
+    #cp -ri $user /usr/local/bin;
+    install $1 /usr/local/bin;
 
 
 }

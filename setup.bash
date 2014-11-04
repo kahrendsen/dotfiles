@@ -33,8 +33,26 @@ cp $(dirname $0)/git-completion.bash ~ &> /dev/null
 grep "source ~/.bashrc" ~/.bash_profile &> /dev/null || echo "source ~/.bashrc" >> ~/.bash_profile
 
 
+#Go through all of the color schemes for popular terminal emulators and try to copy the correct files to the correct places
+#Those that don't match the current terminal emulator should simply fail. I may pipe the errors to dev/null later
+#iTerm2 needs to be set manually, the file to import is in the git repo
+
+#xfce-terminal
+cp terminalrc ~/.config/Terminal/terminalrc &> /dev/null || echo "Not Xfce"
+
+#gnome
+rake set scheme=solarized_dark &> /dev/null || echo "Not Gnome"
+
+#xterm
+(which xterm && cp .Xresources && xrdb -merge ~/.Xresources~) &> /dev/null || echo "Not xterm"
+
+#Konsole
+cp SolarizedDark.colorscheme ~/.kde/share/apps/konsole &> /dev/null || echo "Not Konsole"
+
+###################################################################################################
+
 #Don't do any fancy network stuff if simple is active
-if [ "$1" = "s" ];
+if [ "$1" = "-s" ];
 then
 	exit 0
 fi
@@ -45,7 +63,7 @@ fi
 usedSpaceStart=$(((df --total 2> /dev/null | grep total) || (df 2> /dev/null | grep disk1)) | awk 'END{print $3;}')
 
 #major package managers: aptitude - debian, yum - fedora, homebrew - OSX, 
-installer="ERROR" #somehow didn't have aptitude or yum and we're not on OSX, or something failed
+installer="ERROR" #somehow didnt have aptitude or yum and we're not on OSX, or something failed
 #If we find yum, we also try to set two additional repos, because RHEL's defaults are kinda sucky. Not a big deal if this fails. Hopefully Fedora won't need this
 #Or not, apparently you can't use alternative repos in RHEL, at least at LinkedIn... Oh well
 which yum &> /dev/null && installer="sudo yum -y " && sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm &> /dev/null; sudo rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm &> /dev/null
@@ -85,6 +103,9 @@ $installer install most || echo "Could not install most"
 #install autojump
 $installer install autojump || echo "Couldn't install autojump"
 
+#install lsof
+$installer install lsof || echo "Couldn't install lsof"
+
 #install htop
 $installer install htop || echo "Couldn't install htop"
 
@@ -96,23 +117,6 @@ $installer install xclip || echo "Couldn't install xclip"
 
 #install tree
 $installer install tree || echo "Couldn't install tree"
-
-#Go through all of the color schemes for popular terminal emulators and try to copy the correct files to the correct places
-#Those that don't match the current terminal emulator should simply fail. I may pipe the errors to dev/null later
-#iTerm2 needs to be set manually, the file to import is in the git repo
-
-#xfce-terminal
-cp terminalrc ~/.config/Terminal/terminalrc &> /dev/null || echo "Not Xfce"
-
-#gnome
-rake set scheme=solarized_dark &> /dev/null || echo "Not Gnome"
-
-#xterm
-(which xterm && cp .Xresources && xrdb -merge ~/.Xresources~) &> /dev/null || echo "Not xterm"
-
-#Konsole
-cp SolarizedDark.colorscheme ~/.kde/share/apps/konsole &> /dev/null || echo "Not Konsole"
-
 
 usedSpaceEnd=$(((df --total 2> /dev/null | grep total) || (df 2> /dev/null | grep disk1)) | awk 'END{print $3;}')
 installSpace=$((usedSpaceEnd-usedSpaceStart))
