@@ -42,6 +42,9 @@ alias l='ls'
 alias s='ls'
 alias sl='ls'
 
+#Use 'command not found' if possible
+ [ -r /etc/profile.d/cnf.sh ] && . /etc/profile.d/cnf.sh 
+
 #I think most of these are pretty broken
 #function soffice() { command soffice "$@" & }
 #function firefox() { firefox "$@" & &> /dev/null || /usr/bin/firefox "$@" & &> /dev/null || open firefox "$@" &> /dev/null; }
@@ -189,6 +192,96 @@ function savepath()
 {
    echo "export PATH=$PATH" >> ~/.bash_profile
 }
+
+# we () #I'm copying this from some guys dotfiles, it could be broken for all I know
+# {
+# local __doc__='Edit the first argument if it is a function or alias'
+
+# if [[ "$(type -t $1)" == "function" ]]
+# then
+# _de_declare_function $1
+# _edit_function
+# elif [[ "$(type -t $1)" == "alias" ]]
+# then
+# _edit_alias $1
+# else type $1
+# fi
+# }
+
+# _de_declare_function ()
+# {
+# local __doc__='Set symbols for the file and line of a function'
+# _parse_declaration $(_debug_declare_function $1)
+# }
+
+# _parse_declaration ()
+# {
+# local __doc__='extract the ordered arguments from a debug declare'
+# function=$1;
+# shift;
+# line_number=$1;
+# shift;
+# path_to_file="$*";
+# }
+
+# _debug_declare_function ()
+# {
+# local __doc__='Find where the first argument was loaded from';
+# bash -c 'shopt -s extdebug;declare -F $1; shopt -u extdebug;';
+
+
+
+# }
+
+
+# _edit_function ()
+# {
+# local __doc__='Edit a function in a file'
+# _make_path_to_file_exist
+# if [[ -n "$line_number" ]]
+# then
+# $EDITOR $path_to_file +$line_number
+# else
+# local regexp="^$function[[:space:]]*()[[:space:]]*$"
+# if ! grep -q $regexp $path_to_file
+# then declare -f $function >> $path_to_file
+# fi
+# $EDITOR $path_to_file +/$regexp
+# fi
+# ls -l $path_to_file
+# source $path_to_file
+# [[ $(dirname $path_to_file) == /tmp ]] && rm -f $path_to_file
+# }
+
+# _make_path_to_file_exist ()
+# {
+# local __doc__='make sure the required file exists, either an existing file, a new file, or a temp file'
+# if [[ -n $path_to_file ]]
+# then
+# if [[ -f $path_to_file ]]
+# then
+# cp $path_to_file $path_to_file~
+# else
+# _write_new_file $path_to_file
+# if [[ $function == $unamed_function ]]
+# then
+# line_number=$(wc -l $path_to_file)
+# declare -f $unamed_function >> $path_to_file
+# fi
+# fi
+# else
+# path_to_file=$(mktemp /tmp/function.XXXXXX)
+# fi
+# }
+
+# _write_new_file ()
+# {
+# local __doc__='Copy the head of this script to file'
+# echo "#! /bin/sh\n" > $path_to_file
+# }
+
+
+
 
 
 #Stuff to print out at the beginning of the session
