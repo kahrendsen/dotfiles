@@ -15,3 +15,4 @@ setopt appendhistory extendedglob
 unsetopt beep
 bindkey -v
 # End of lines configured by zsh-newuser-install
+source common.sh
