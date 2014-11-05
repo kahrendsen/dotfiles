@@ -228,7 +228,8 @@ set t_Co=256
 let g:solarized_termcolors=256
 
 " For line wrap
-set showbreak=↪
+" set showbreak=↪
+" I have no idea what's wrong with this, wtf is up with that character
 
 " Apparently Ex Mode is a bad thing
 nnoremap Q <nop>
