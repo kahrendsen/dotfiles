@@ -37,6 +37,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'msanders/snipmate.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
+" Plugin 'folding'
 
 " Colors
 Plugin 'desert256.vim'

@@ -26,3 +26,4 @@ unsetopt beep
 bindkey -v
 # End of lines configured by zsh-newuser-install
 source common.sh
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/home/kendall/source/buddy-2.4/src/.libs
