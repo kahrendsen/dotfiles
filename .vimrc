@@ -45,6 +45,7 @@ Plugin 'tpope/vim-vividchalk'
 Plugin 'Railscasts-Theme-GUIand256color'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'inkpot'
+Plugin 'sjl/badwolf'
 
 
 
@@ -259,3 +260,6 @@ set background=dark
   " For python files (AI) set tabstop=2 and expandtab
 autocmd BufNewFile,BufRead *.py set tabstop=3
 autocmd BufNewFile,BufRead *.py set et
+
+" Make using leader much better, need to find something for ':'...
+let g:mapleader=" "
