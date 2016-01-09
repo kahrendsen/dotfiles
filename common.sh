@@ -46,6 +46,7 @@ alias speedtest='wget -O /dev/null http://speedtest.wdc01.softlayer.com/download
 alias grep='grep --color=auto' #MAC OK?
 alias ll='ls -Alv' #MAC OK
 ls -h --color=auto &> /dev/null && alias ls='ls -h --color=auto' || alias ls='ls -hG' #Always colorize and use sensible sizes, should now be MAC OK
+alias vi='vim'
 alias la='ls -A'           #  Show hidden files, MAC OK
 ls -lXB &> /dev/null && alias lx='ls -lXB'         #  Sort by extension. XB NOT OK, X - File Extension, B - don't list backups
 alias lk='ls -lSr'         #  Sort by size, biggest last. MAC OK
@@ -64,6 +65,11 @@ alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
 alias l='ls'
 alias s='ls'
 alias sl='ls'
+#Quick access to the config files
+alias vimrc='vim ~/.vimrc'
+alias bashrc='vim ~/.bashrc'
+alias zshrc='vim ~/.zshrc'
+
 
 #Use 'command not found' if possible
  [ -r /etc/profile.d/cnf.sh ] && . /etc/profile.d/cnf.sh 

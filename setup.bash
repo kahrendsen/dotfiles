@@ -29,12 +29,20 @@ cp $(dirname $0)/git-completion.bash ~ &> /dev/null
 
 #Kill CapsLock
 #currently doesn't work on mac (or at all?)
-( (dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys) &> /dev/null
+#( (dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys) &> /dev/null
 #Maybe kill mouse accel too?
 
 #make sure bashrc loads in login shells too
 grep "source ~/.bashrc" ~/.bash_profile &> /dev/null || echo "source ~/.bashrc" >> ~/.bash_profile
 
+
+###################################################################################################
+
+#Don't do any fancy network stuff if simple is active
+if [ "$1" = "-s" ];
+then
+	exit 0
+fi
 
 #Go through all of the color schemes for popular terminal emulators and try to copy the correct files to the correct places
 #Those that don't match the current terminal emulator should simply fail. I may pipe the errors to dev/null later
@@ -52,13 +60,6 @@ rake set scheme=solarized_dark &> /dev/null || echo "Not Gnome"
 #Konsole
 cp SolarizedDark.colorscheme ~/.kde/share/apps/konsole &> /dev/null || echo "Not Konsole"
 
-###################################################################################################
-
-#Don't do any fancy network stuff if simple is active
-if [ "$1" = "-s" ];
-then
-	exit 0
-fi
 
 #note how much space we have now so we know how much we used when we're through
 #hopefully this helps figure out if I can use this on, say, a Raspberry Pi
@@ -80,7 +81,7 @@ which yum &> /dev/null && installer="sudo yum -y install" && upgrade="sudo yum -
 which aptitude &> /dev/null && installer="sudo aptitude -y install" && upgrade = "sudo aptitude -y upgrade"
 
 #OSX
-uname | grep -i darwin && ruby $(dirname $0)/homebrew_install.rb; installer="brew install" && upgrade="brew upgrade" && brew update && zsh $dir/di-xquartz.sh
+uname | grep -i darwin && (ruby $(dirname $0)/homebrew_install.rb; installer="brew install") && upgrade="brew upgrade" && brew update && zsh $dir/di-xquartz.sh
 
 #Arch
 which pacman &>/dev/null && installer="sudo pacman -S --noconfirm " && upgrade="sudo pacman -Syu"
@@ -93,7 +94,7 @@ git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2>&1
 #git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2>&1 || { echo >&2 "Git not installed, attempting to install..."; sudo apt-get -y install git-core; git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim }
 
 #install zsh
-$installer zsh &> /dev/null || echo "Couldn't install zsh"
+$installer zsh || echo "Couldn't install zsh"
 
 #set shell to zsh
 sudo chsh $(whoami) -s /bin/zsh

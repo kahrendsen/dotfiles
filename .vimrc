@@ -46,6 +46,7 @@ Plugin 'Railscasts-Theme-GUIand256color'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'inkpot'
 Plugin 'sjl/badwolf'
+Plugin 'sickill/vim-monokai'
 
 
 
@@ -243,8 +244,7 @@ augroup reload_vimrc " {
 augroup END " }
 
 
-"I need to find a better color scheme...
-colorscheme desert
+colorscheme monokai
 set background=dark
 
 
