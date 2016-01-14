@@ -189,4 +189,4 @@ function git_branch_ps1 {
 
 }
 
-source common.sh
+source ~/common.sh
