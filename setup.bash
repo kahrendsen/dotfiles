@@ -88,7 +88,7 @@ upgrade="ERROR"
 which yum &> /dev/null && installer="sudo yum -y install" && upgrade="sudo yum -y upgrade" && echo "Found yum for installer"
 
 #Debian
-which aptitude &> /dev/null && installer="sudo aptitude -y install" && upgrade = "sudo aptitude -y upgrade" && echo "Found aptitude for installer"
+which aptitude &> /dev/null && installer="sudo aptitude -y install" && upgrade="sudo aptitude -y upgrade" && echo "Found aptitude for installer"
 
 #OSX
 uname &> /dev/null | grep -i darwin && (which brew || (ruby $(dirname $0)/homebrew_install.rb && echo "Installed homebrew")) && installer="brew install" && upgrade="brew upgrade" && brew update && zsh $dir/di-xquartz.sh && echo "Found brew for installer"
@@ -96,7 +96,7 @@ uname &> /dev/null | grep -i darwin && (which brew || (ruby $(dirname $0)/homebr
 #Arch
 which pacman &>/dev/null && installer="sudo pacman -S --noconfirm " && upgrade="sudo pacman -Syu" && echo "Found pacman for installer"
 
-if [ $installer == "ERROR" ] || [ $upgrade == "ERROR" ]; 
+if [ "$installer" == "ERROR" ] || [ "$upgrade" == "ERROR" ]; 
     then
         echo 'Could not find an installer, exiting setup';
         exit;
