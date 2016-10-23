@@ -29,15 +29,16 @@ Plugin 'gmarik/Vundle.vim'
 " Avoid a name conflict with L9
 "Plugin 'user/L9', {'name': 'newL9'}
 
-Plugin 'kien/ctrlp.vim'
-Plugin 'Lokaltog/vim-easymotion'
+Plugin 'ctrlpvim/ctrlp.vim'
+"Plugin 'Lokaltog/vim-easymotion'
 Plugin 'scrooloose/nerdtree'
-Plugin 'minibufexplorerpp'
+Plugin 'fholgado/minibufexpl.vim'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'msanders/snipmate.vim'
+"Plugin 'msanders/snipmate.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
-" Plugin 'folding'
+Plugin 'ludovicchabant/vim-gutentags'
+Plugin 'airblade/vim-gitgutter'
 
 " Colors
 Plugin 'desert256.vim'
@@ -264,12 +265,21 @@ autocmd BufNewFile,BufRead *.py set et
 " Make using leader much better, need to find something for ':'...
 let g:mapleader=" "
 
-"##############################################################################
 " Easier split navigation
-"##############################################################################
-
 " Use ctrl-[hjkl] to select the active split!
 nmap <silent> <c-k> :wincmd k<CR>
 nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
+
+nnoremap <C-n> :NERDTreeToggle<CR>
+
+" Disable gutentags if we can't generate tags
+if !executable("ctags")
+    let g:gutentags_enabled=0
+endif
+
+" Load a local .vimrc file
+if filereadable(glob("~/.vimrc.local")) 
+    source ~/.vimrc.local
+endif

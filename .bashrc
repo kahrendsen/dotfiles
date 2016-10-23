@@ -190,3 +190,7 @@ function git_branch_ps1 {
 }
 
 source ~/common.sh
+if [ -e ~/.bashrc.local ];
+then
+    source ~/.bashrc.local;
+fi;

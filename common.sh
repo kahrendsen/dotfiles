@@ -6,7 +6,7 @@ function dvim(){
         ty=$(type -t $1)
         case "$ty" in
             alias) line=$(grep -Ens -m1 "alias[[:space:]]*(-g)?[[:space:]]*[[:alnum:]]*$1[[:alnum:]]*[[:space:]]*=" ~/.bashrc ~/common.sh ~/.zshrc) ;;
-            function) line=$(grep -Ens -m1 "(function)?[[:space:]]*[[:alnum:]]*$1[[:alnum:]]*[[:space:]]*\(.*\)" ~/.bashrc ~/common.sh ~/.zshrc) ;;
+        function) line=$(grep -Ens -m1 "(function)?[[:space:]]*[[:alnum:]]*$1[[:alnum:]]*[[:space:]]*\(?.*\)?" ~/.bashrc ~/common.sh ~/.zshrc) ;; # TODO this needs to be "function foo OR foo ()" as the search criteria
         esac
 
         line_num=$(echo "$line" | cut -d: -f2)
@@ -22,39 +22,41 @@ function dvim(){
 }
 
 
-function http() {
-    curl http://httpcode.info/"$1"
-}
+#function http() {
+    #curl http://httpcode.info/"$1"
+#}
 
 function up {
     if [ $# -eq 0 ]; then
     	cd ..;
     else
     	count=0
+        cdStr="";
     	while [[ count -lt $1 ]]
     	do
-    		cd ..
+    		cdStr+="../"
 			(( count+=1 ))
     	done;
+        cd $cdStr
     fi;
 }
 
 
 
 #alias rm=gvfs-trash
-alias speedtest='wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip'
+#alias speedtest='wget -O /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip'
 alias grep='grep --color=auto' #MAC OK?
 alias ll='ls -Alv' #MAC OK
 ls -h --color=auto &> /dev/null && alias ls='ls -h --color=auto' || alias ls='ls -hG' #Always colorize and use sensible sizes, should now be MAC OK
 alias vi='vim'
 alias la='ls -A'           #  Show hidden files, MAC OK
-ls -lXB &> /dev/null && alias lx='ls -lXB'         #  Sort by extension. XB NOT OK, X - File Extension, B - don't list backups
-alias lk='ls -lSr'         #  Sort by size, biggest last. MAC OK
-alias lt='ls -lt'         #  Sort by date, most recent first. MAC OK
-alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.MAC OK
-alias lu='ls -ltur'        #  Sort by/show access time,most recent last.MAC OK
-alias lm='ll |less'        #  Pipe through 'less'MAC OK 
-alias lr='ll -R'           #  Recursive ls. MAC OK
+#ls -lXB &> /dev/null && alias lx='ls -lXB'         #  Sort by extension. XB NOT OK, X - File Extension, B - don't list backups
+#alias lk='ls -lSr'         #  Sort by size, biggest last. MAC OK
+#alias lt='ls -lt'         #  Sort by date, most recent first. MAC OK
+#alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.MAC OK
+#alias lu='ls -ltur'        #  Sort by/show access time,most recent last.MAC OK
+#alias lm='ll |less'        #  Pipe through 'less'MAC OK 
+#alias lr='ll -R'           #  Recursive ls. MAC OK
 which tree &> /dev/null && alias tree='tree -Csh'    #  Nice alternative to 'recursive ls' ... (MAC OK if tree is installed)
 alias mkdir='mkdir -p' #Make intermediate directories as required, MAC OK
 #alias more='most'
