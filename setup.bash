@@ -20,7 +20,7 @@ sudo chmod 744 $dir/* && echo 'Successfully changed permissions' || echo 'Failed
 echo 'Linking dotfiles in home...'
 ln -i $(dirname $0)/.vimrc ~/
 ln -i $(dirname $0)/.bashrc ~/
-ln -i $dir/common.sh ~/
+ln -i $dir/.common.sh ~/
 ln -i $dir/.zshrc ~/
 echo 'Finished linking dotfiles'
 

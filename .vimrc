@@ -274,6 +274,30 @@ nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
 
+
+" ------- Status line -------
+" start of default statusline
+" f: relative path
+" h: Help buffer flag
+" w: Preview window flag
+" m: Modified flag
+" r: Readonly flag
+set statusline=%f\ %h%w%m%r\ 
+
+" Syntastic statusline
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+" end of default statusline (with ruler)
+" =: Left-to-right switch
+" (: Item group start
+" l: Line number
+" c: Column number
+" V: virtual column number, e.g. as if tabs or multi-byte chars were multiple chars
+" P: Percentage through file
+set statusline+=%=%(%l,%c%V\ %=\ %P%)
+
 " ------- Plugins -------
 
 " NERDTree
@@ -285,12 +309,6 @@ if !executable('ctags')
     let g:gutentags_enabled=0
 endif
 
-" Syntastic
-" Status bar errors
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
 let g:syntastic_always_populate_loc_list = 1 " The location list lets us jump to errors
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
@@ -301,7 +319,10 @@ let g:syntastic_check_on_wq = 0
 " See currently enabled checkers for a language with :SyntasticInfo <language>
 
 " Shell (including bash), zsh doesn't need an external and is already default
-let g:syntastic_sh_checkers = ['shellcheck']
+let g:syntastic_sh_checkers = ['shellcheck', 'sh']
+" x allows shellcheck to check sourced files. 
+" Exclude allows relative paths and non-existant files in scripts
+let g:syntastic_sh_shellcheck_args = '-x --exclude=SC1090,SC1091'
 " VimL (includes vimrc)
 " pip install vim-vint (if you get 'cannot recognize output' or 'cannot
 " import', you need to install pip without the system package manager)

@@ -95,63 +95,63 @@ function swap()
     mv $TMPFILE "$2"
 }
 
-function extract()      # Handy Extract Program
-{
-    if [ -f $1 ] ; then
-        case $1 in
-            *.tar.bz2)   tar xvjf $1     ;;
-            *.tar.gz)    tar xvzf $1     ;;
-            *.bz2)       bunzip2 $1      ;;
-            *.rar)       unrar x $1      ;;
-            *.gz)        gunzip $1       ;;
-            *.tar)       tar xvf $1      ;;
-            *.tbz2)      tar xvjf $1     ;;
-            *.tgz)       tar xvzf $1     ;;
-            *.zip)       unzip $1        ;;
-            *.Z)         uncompress $1   ;;
-            *.7z)        7z x $1         ;;
-            *)           echo "'$1' cannot be extracted via >extract<" ;;
-        esac
-    else
-        echo "'$1' is not a valid file!";
-    fi
-}
+#function extract()      # Handy Extract Program
+#{
+    #if [ -f $1 ] ; then
+        #case $1 in
+            #*.tar.bz2)   tar xvjf $1     ;;
+            #*.tar.gz)    tar xvzf $1     ;;
+            #*.bz2)       bunzip2 $1      ;;
+            #*.rar)       unrar x $1      ;;
+            #*.gz)        gunzip $1       ;;
+            #*.tar)       tar xvf $1      ;;
+            #*.tbz2)      tar xvjf $1     ;;
+            #*.tgz)       tar xvzf $1     ;;
+            #*.zip)       unzip $1        ;;
+            #*.Z)         uncompress $1   ;;
+            #*.7z)        7z x $1         ;;
+            #*)           echo "'$1' cannot be extracted via >extract<" ;;
+        #esac
+    #else
+        #echo "'$1' is not a valid file!";
+    #fi
+#}
 
 
 # Creates an archive (*.tar.gz) from given directory.
-function maketar() { tar cvzf "${1%%/}.tar.gz"  "${1%%/}/"; }
+#function maketar() { tar cvzf "${1%%/}.tar.gz"  "${1%%/}/"; }
 
 # Create a ZIP archive of a file or folder.
-function makezip() { zip -r "${1%%/}.zip" "$1" ; }
+#function makezip() { zip -r "${1%%/}.zip" "$1" ; }
 
 # Make your directories and files access rights sane.
-function sanitize() { chmod -R u=rwX,g=rX,o= "$@" ;}
+#function sanitize() { chmod -R u=rwX,g=rX,o= "$@" ;}
 
 
-function killps()   # kill by process name
-{
-    local pid pname sig="-TERM"   # default signal
-    if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
-        echo "Usage: killps [-SIGNAL] pattern"
-        return;
-    fi
-    if [ $# = 2 ]; then sig=$1 ; fi
-    for pid in $(my_ps| awk '!/awk/ && $0~pat { print $1 }' pat=${!#} )
-    do
-        pname=$(my_ps | awk '$1~var { print $5 }' var=$pid )
-        if ask "Kill process $pid <$pname> with signal $sig?"
-            then kill $sig $pid
-        fi
-    done
-}
+#function killps()   # kill by process name
+#{
+    #local pid pname sig="-TERM"   # default signal
+    #if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+        #echo "Usage: killps [-SIGNAL] pattern"
+        #return;
+    #fi
+    #if [ $# = 2 ]; then sig=$1 ; fi
+    #for pid in $(my_ps| awk '!/awk/ && $0~pat { print $1 }' pat=${!#} )
+    #do
+        #pname=$(my_ps | awk '$1~var { print $5 }' var=$pid )
+        #if ask "Kill process $pid <$pname> with signal $sig?"
+            #then kill $sig $pid
+        #fi
+    #done
+#}
 
 
-function getIP() # Get IP adress on ethernet.
-{
-    MY_IP=$(/sbin/ifconfig eth0 | awk '/inet/ { print $2 } ' |
-      sed -e s/addr://)
-    echo ${MY_IP:-"Not connected"}
-}
+#function getIP() # Get IP adress on ethernet.
+#{
+    #MY_IP=$(/sbin/ifconfig eth0 | awk '/inet/ { print $2 } ' |
+      #sed -e s/addr://)
+    #echo ${MY_IP:-"Not connected"}
+#}
 
 
 function repeat()       # Repeat n times command.
@@ -165,48 +165,48 @@ function repeat()       # Repeat n times command.
 
 #Automate the slightly irritating process to get RSA keys onto GitHub.
 #Note if I get this the way I'm hoping, it'll probably be pretty unsafe since I'm lazy about passphrases
-function ezkey() 
-{
-    pushd "$(pwd)"
-    cd ~/.ssh
-    ssh-keygen -A
-    ssh-add id_rsa
-    which xclip &> /dev/null && xclip -sel clip < ~/.ssh/id_rsa.pub
-    ~/.ssh/id_rsa.pub | echo
-    firefox https://github.com/settings/ssh #should use that default-thing here
-	popd | cd
-}
+#function ezkey() 
+#{
+    #pushd "$(pwd)"
+    #cd ~/.ssh
+    #ssh-keygen -A
+    #ssh-add id_rsa
+    #which xclip &> /dev/null && xclip -sel clip < ~/.ssh/id_rsa.pub
+    #~/.ssh/id_rsa.pub | echo
+    #firefox https://github.com/settings/ssh #should use that default-thing here
+	#popd | cd
+#}
 
 #Hopefully will automatically execute the last line of the stderr to be printed
 #Useful for "X, not installed, type sudo apt-get to install"
-function doit()
-{
-    eval "$(!! 2>&1 >/dev/null | tail -1 )"
-}
+#function doit()
+#{
+    #eval "$(!! 2>&1 >/dev/null | tail -1 )"
+#}
 
-function killport()
-{
-    #pid=$(lsof -i:$1 -t); 
-    #kill $pid || kill -s 9 $pid;
-    #lsof -i tcp:${PORT_NUMBER} | awk 'NR!=1 {print $2}' | xargs kill
-    PID=$(lsof -i:$1 | grep 'username' | awk '{print $2}')
-    if [ $PID ]; then
-        kill $PID;
-    fi
-}
+#function killport()
+#{
+    ##pid=$(lsof -i:$1 -t); 
+    ##kill $pid || kill -s 9 $pid;
+    ##lsof -i tcp:${PORT_NUMBER} | awk 'NR!=1 {print $2}' | xargs kill
+    #PID=$(lsof -i:$1 | grep 'username' | awk '{print $2}')
+    #if [ $PID ]; then
+        #kill $PID;
+    #fi
+#}
 
-function installbin()
-{
-    user=`id -un`;
-    if [ ! -w /usr/local/bin ];
-    then
-        sudo chown -R $user /usr/local/bin;
-    fi
-    #cp -ri $user /usr/local/bin;
-    install $1 /usr/local/bin;
+#function installbin()
+#{
+    #user=`id -un`;
+    #if [ ! -w /usr/local/bin ];
+    #then
+        #sudo chown -R $user /usr/local/bin;
+    #fi
+    ##cp -ri $user /usr/local/bin;
+    #install $1 /usr/local/bin;
 
 
-}
+#}
 
 function addpath()
 {
@@ -219,10 +219,10 @@ function addpath()
 
 }
 
-function savepath()
-{
-   echo "export PATH=$PATH" >> ~/.bash_profile
-}
+#function savepath()
+#{
+   #echo "export PATH=$PATH" >> ~/.bash_profile
+#}
 
 # we () #I'm copying this from some guys dotfiles, it could be broken for all I know
 # {

@@ -12,8 +12,8 @@
 #256 Color, i guess only works for xterm?
 if [ -e /usr/share/terminfo/x/xterm-256color ]; then
         export TERM='xterm-256color'
-else
-        export TERM='xterm-color'
+#else
+        #export TERM='xterm-color'
 fi
 
 
@@ -125,7 +125,7 @@ export HISTSIZE=100000
 #export PATH="$PATH:~/.cabal/bin"
 
 #load autojump
-. /usr/share/autojump/autojump.sh 2&> /dev/null
+#. /usr/share/autojump/autojump.sh 2&> /dev/null
 
 #attempt to load git completion scripts
 #if [[ -f ~/.git-prompt.sh ]]; then true else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > /dev/null; fi
@@ -143,7 +143,8 @@ function set_prompt {
     #We're gonna try to make this shit readable if it kills us.
 
     local last_command=$? # Must come first!
-    local rootCol=$(if [[ $(id -u) -eq "0" ]]; then echo "$BRed"; else echo "$BCyan"; fi)
+    local rootCol
+    rootCol=$(if [[ $(id -u) -eq "0" ]]; then echo "$BRed"; else echo "$BCyan"; fi)
 
     PS1=""
 
@@ -155,7 +156,7 @@ function set_prompt {
     PS1+=$(if [[ $last_command -eq 0 ]]; then echo "$Green$happy$Color_Off "; else echo "$Red$sad$Color_Off "; fi)
     #name@machine if ssh'd
     local ssh_var="ssh:\u@\h "
-    PS1+=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_far$Color_Off "; else echo ""; fi)
+    PS1+=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_var$Color_Off "; else echo ""; fi)
     #Working directory
     PS1+="$rootCol$PathShort$Color_Off "
     #Git branch
@@ -171,14 +172,13 @@ function git_branch_ps1 {
     #This'll just echo the appropriate string for inserting the current git branch in the correct color
     
     #Shows a % if there are untracked files, helps with forgetting to add things
-    GIT_PS1_SHOWUNTRACKEDFILES=1
+    # GIT_PS1_SHOWUNTRACKEDFILES=1
 
     #are we in a branch at all?
-    git branch &>/dev/null;
-    if [ $? -eq 0 ]; then
+    
+    if git branch &>/dev/null; then
         #we're in a branch. Do we have uncommited changes?
-        git status 2> /dev/null | grep "nothing to commit" > /dev/null 2>&1;
-        if [ "$?" -eq "0" ]; then
+        if git status 2> /dev/null | grep "nothing to commit" > /dev/null 2>&1; then
             #Nothing to commit
             echo "$Green$(__git_ps1 "(%s)")$Color_Off";
         else
@@ -189,7 +189,7 @@ function git_branch_ps1 {
 
 }
 
-source ~/common.sh
+source ~/.common.sh
 if [ -e ~/.bashrc.local ];
 then
     source ~/.bashrc.local;
