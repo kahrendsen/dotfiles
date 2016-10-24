@@ -1,7 +1,8 @@
+" Support unicode in vimrc
+scriptencoding=utf-8
 " Vundle stuff
 " Install: git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
-set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
@@ -39,6 +40,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
 Plugin 'ludovicchabant/vim-gutentags'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'scrooloose/syntastic'
 
 " Colors
 Plugin 'desert256.vim'
@@ -263,7 +265,7 @@ autocmd BufNewFile,BufRead *.py set tabstop=3
 autocmd BufNewFile,BufRead *.py set et
 
 " Make using leader much better, need to find something for ':'...
-let g:mapleader=" "
+let g:mapleader=' '
 
 " Easier split navigation
 " Use ctrl-[hjkl] to select the active split!
@@ -272,14 +274,42 @@ nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
 
+" ------- Plugins -------
+
+" NERDTree
 nnoremap <C-n> :NERDTreeToggle<CR>
 
+" GutenTags
 " Disable gutentags if we can't generate tags
-if !executable("ctags")
+if !executable('ctags')
     let g:gutentags_enabled=0
 endif
 
+" Syntastic
+" Status bar errors
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1 " The location list lets us jump to errors
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" Enabled checkers
+" These need to be installed to be used
+" See :h syntastic-checkers for all languages, :h syntastic-checkers-<language> for specific
+" See currently enabled checkers for a language with :SyntasticInfo <language>
+
+" Shell (including bash), zsh doesn't need an external and is already default
+let g:syntastic_sh_checkers = ['shellcheck']
+" VimL (includes vimrc)
+" pip install vim-vint (if you get 'cannot recognize output' or 'cannot
+" import', you need to install pip without the system package manager)
+let g:syntastic_vim_checkers = ['vint']
+" XML
+let g:syntastic_xml_checkers = ['xmllint']
+
 " Load a local .vimrc file
-if filereadable(glob("~/.vimrc.local")) 
+if filereadable(glob('~/.vimrc.local')) 
     source ~/.vimrc.local
 endif
