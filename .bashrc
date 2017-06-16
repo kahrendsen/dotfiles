@@ -148,24 +148,25 @@ function set_prompt {
 
     PS1=""
 
-    #Time stamp
-    PS1+="$Blue$Time12h$Color_Off "
-    #Status of last command
-    local happy=":D"
-    local sad="D:"
-    PS1+=$(if [[ $last_command -eq 0 ]]; then echo "$Green$happy$Color_Off "; else echo "$Red$sad$Color_Off "; fi)
-    #name@machine if ssh'd
-    local ssh_var="ssh:\u@\h "
-    PS1+=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_var$Color_Off "; else echo ""; fi)
-    #Working directory
-    PS1+="$rootCol$PathShort$Color_Off "
-    #Git branch
-    PS1+=$(git_branch_ps1)
-    #newline
-    PS1+="$NewLine"
+    if [ -z "$NO_STATUS_LINE" ]; then
+        #Time stamp
+        PS1+="$Blue$Time12h$Color_Off "
+        #Status of last command
+        local happy=":D"
+        local sad="D:"
+        PS1+=$(if [[ $last_command -eq 0 ]]; then echo "$Green$happy$Color_Off "; else echo "$Red$sad$Color_Off "; fi)
+        #name@machine if ssh'd
+        local ssh_var="ssh:\u@\h "
+        PS1+=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_var$Color_Off "; else echo ""; fi)
+        #Working directory
+        PS1+="$rootCol$PathShort$Color_Off "
+        #Git branch
+        PS1+=$(git_branch_ps1)
+        #newline
+        PS1+="$NewLine"
+    fi
     #Finally, $ or #
-    PS1+='\$'
-
+    PS1+="$rootCol\$$Color_Off"
 }
 
 function git_branch_ps1 {
