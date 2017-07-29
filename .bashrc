@@ -122,26 +122,14 @@ shopt -s dirspell &> /dev/null
 
 export HISTFILESIZE=500000
 export HISTSIZE=100000
-#export PATH="$PATH:~/.cabal/bin"
-
-#load autojump
-#. /usr/share/autojump/autojump.sh 2&> /dev/null
 
 #attempt to load git completion scripts
-#if [[ -f ~/.git-prompt.sh ]]; then true else wget -O ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh > /dev/null; fi
-#if [[ -f ~/.git-completion.bash ]]; then true else wget -O ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > /dev/null; fi
 source ~/git-completion.bash &> /dev/null
 source ~/git-prompt.sh &> /dev/null
 
-#This is executed every time we're about to show a prompt, so the sanest way to build PS1 is to use this
-#Otherwise we get totally unreadable strings from hell
 PROMPT_COMMAND="set_prompt"
-#zsh equivilant(sp?) is precmd
 
 function set_prompt {
-
-    #We're gonna try to make this shit readable if it kills us.
-
     local last_command=$? # Must come first!
     local rootCol
     rootCol=$(if [[ $(id -u) -eq "0" ]]; then echo "$BRed"; else echo "$BCyan"; fi)
@@ -175,18 +163,15 @@ function git_branch_ps1 {
     #Shows a % if there are untracked files, helps with forgetting to add things
     # GIT_PS1_SHOWUNTRACKEDFILES=1
 
-    #are we in a branch at all?
-    
-    if git branch &>/dev/null; then
-        #we're in a branch. Do we have uncommited changes?
-        if git status 2> /dev/null | grep "nothing to commit" > /dev/null 2>&1; then
-            #Nothing to commit
-            echo "$Green$(__git_ps1 "(%s)")$Color_Off";
-        else
-            #uncommitted changes
-            echo "$Red$(__git_ps1 "{%s}")$Color_Off";
-        fi;
-    fi;
+    #Do we have uncommited changes?
+    if ! git diff --no-ext-diff --quiet --exit-code 2> /dev/null || ! git diff-index --cached --quiet HEAD 2> /dev/null
+    then
+        #uncommitted changes
+        echo "$Red$(__git_ps1 "{%s}")$Color_Off";
+    else
+        #Nothing to commit
+        echo "$Green$(__git_ps1 "(%s)")$Color_Off";
+    fi
 
 }
 
@@ -194,4 +179,4 @@ source ~/.common.sh
 if [ -e ~/.bashrc.local ];
 then
     source ~/.bashrc.local;
-fi;
+fi
