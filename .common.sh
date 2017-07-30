@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/usr/bin/env ksh
 # ksh gets us close enough to the intersection between bash and zsh
 # should probably run the zsh side with emulate -L ksh
 
@@ -21,7 +21,7 @@ alias vimrc='vim ~/.vimrc'
 alias bashrc='vim ~/.bashrc'
 alias zshrc='vim ~/.zshrc'
 # Open files from terminal
-which xdg-open && alias open=xdg-open
+which xdg-open &> /dev/null && alias open=xdg-open
 
 
 ##### Functions
@@ -123,6 +123,86 @@ addpath()
     #fi
 #}
 
+##### Prompt
+
+function set_prompt {
+    PS1="$(get_prompt_str)"
+}
+
+function get_prompt_str {
+    local last_command=$? # Must come first!
+    local rootCol
+    rootCol=$(if [[ $(id -u) -eq "0" ]]; then echo "$L_RED"; else echo "$L_CYAN"; fi)
+
+    if [ -z "$NO_STATUS_LINE" ]; then
+        #Date
+        local date_str="$BLUE$DATE$COLOR_OFF"
+        #Time stamp
+        local time_str="$BLUE$TIME24H$COLOR_OFF"
+        #Status of last command
+        local happy=":D"
+        local sad="D:"
+        local last_cmd
+        last_cmd=$(if [[ $last_command -eq 0 ]]; then echo "$GREEN$happy$COLOR_OFF"; else echo "$RED$sad$COLOR_OFF"; fi)
+        #name@machine if ssh'd
+        local ssh_var="ssh:$USERNAME_PROMPT@$HOSTNAME_PROMPT "
+        local ssh_out
+        ssh_out=$(if [[ -n "$SSH_CLIENT" ]]; then echo "$rootCol$ssh_var$COLOR_OFF "; else echo ""; fi)
+        #Working directory
+        local working_dir="$rootCol$PATH_SHORT$COLOR_OFF"
+        #Git branch
+        local git_info
+        git_info=$(git_branch_ps1)
+    fi
+    # Virutal env
+    local virtual_env_str
+    virtual_env_str=$(add_venv_info)
+    #Finally, $ or #
+    local prompt_char="$rootCol\$$COLOR_OFF"
+    printf "%s|%s %s %s%s %s%s%s%s" "$date_str" "$time_str" "$last_cmd" "$ssh_out" "$working_dir" "$git_info" "$NEWLINE" "$virtual_env_str" "$prompt_char"
+}
+
+# Load git prompt script
+source ~/git-prompt.sh &> /dev/null
+
+function git_branch_ps1 {
+    #This'll just echo the appropriate string for inserting the current git branch in the correct color
+    
+    #Shows a % if there are untracked files, helps with forgetting to add things
+    # GIT_PS1_SHOWUNTRACKEDFILES=1
+
+    #Do we have uncommited changes?
+    if ! git diff --no-ext-diff --quiet --exit-code 2> /dev/null || ! git diff-index --cached --quiet HEAD 2> /dev/null
+    then
+        #uncommitted changes
+        echo "$RED$(__git_ps1 "{%s}" 2> /dev/null)$COLOR_OFF";
+    else
+        #Nothing to commit
+        echo "$GREEN$(__git_ps1 "(%s)" 2> /dev/null)$COLOR_OFF";
+    fi
+
+}
+# Virtual ENV stuff
+# https://stackoverflow.com/questions/14987013
+add_venv_info () {
+    if [ -z "$VIRTUAL_ENV_DISABLE_PROMPT" ] ; then
+        VIRT_ENV_TXT=""
+        if [ "x" != x ] ; then
+            VIRT_ENV_TXT=""
+        else
+            if [ "`basename \"$VIRTUAL_ENV\"`" = "__" ] ; then
+                # special case for Aspen magic directories
+                # see http://www.zetadev.com/software/aspen/
+                VIRT_ENV_TXT="[`basename \`dirname \"$VIRTUAL_ENV\"\``]"
+            elif [ "$VIRTUAL_ENV" != "" ]; then
+                VIRT_ENV_TXT="(`basename \"$VIRTUAL_ENV\"`)"
+            fi
+        fi
+        if [ "${VIRT_ENV_TXT}" != "" ]; then
+           echo ${VIRT_ENV_TXT}" "
+        fi
+    fi
+}
 ##### Load scripts
 #Use 'command not found' if possible
  [ -r /etc/profile.d/cnf.sh ] && . /etc/profile.d/cnf.sh 
