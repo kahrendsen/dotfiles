@@ -17,7 +17,8 @@ if [ -e /usr/share/terminfo/x/xterm-256color ]; then
 fi
 
 
-#Define a bunch of colors
+# Define ANSI colors
+# These are interpreted by the terminal. Bash requires non-printing escape sequences to be enclosed in "\[\033[" and "\]"
 
 # Reset
 Color_Off="\[\033[0m\]"       # Text Reset
