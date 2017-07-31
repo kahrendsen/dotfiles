@@ -251,16 +251,7 @@ colorscheme monokai
 set background=dark
 
 
-"this makes it so braces and such get the matching brace automatically.
-"there might be a better way to do this
-":inoremap ( ()<Esc>i
-:inoremap { {}<Esc>i
-":inoremap [ []<Esc>i
-":inoremap ' ''<Esc>i
-":inoremap " ""<Esc>i
-"
-"
-  " For python files (AI) set tabstop=2 and expandtab
+" For python files (AI) set tabstop=2 and expandtab
 autocmd BufNewFile,BufRead *.py set tabstop=3
 autocmd BufNewFile,BufRead *.py set et
 
