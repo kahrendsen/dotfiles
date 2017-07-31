@@ -9,26 +9,87 @@
 #fi
 
 
-# The following lines were added by compinstall
+##### Settings
+# Zsh options are case insensitive and ignore _
 
-zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
-zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}'
-zstyle :compinstall filename '/home/kendall/.zshrc'
+bindkey -e # Emacs mode for line editing
+
+# zstyle is basically a way to configure specific subsystems, as opposed to global configuration you get from setopt or exported vars
+# See: 
+#     https://unix.stackexchange.com/questions/214657
+#     http://zsh.sourceforge.net/Doc/Release/Zsh-Modules.html#The-zsh_002fzutil-Module
+#     http://bewatermyfriend.org/p/2012/003/
+# Commands are of the form: zstyle "context-pattern" style value(s)
+
+# The completion system, compsys, defines all of its styles under the :completion prefix
+# Contexts for compsys are of the form: :completion:<func>:<completer>:<command>:<argument>:<tag>
+# See http://zsh.sourceforge.net/Guide/zshguide06.html#l154 for an explanation of the context strings for compsys
+# For all available styles available to compsys, see http://zsh.sourceforge.net/Doc/Release/Completion-System.html#Standard-Styles
+zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate # Defines which completers to use and their order, see http://zsh.sourceforge.net/Doc/Release/Completion-System.html#Control-Functions
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'm:{a-zA-Z}={A-Za-z} l:|=* r:|=*' #Should match in this priority: exact, case insensitive from beginning of word, case insensitive anywhere. See http://zsh.sourceforge.net/Doc/Release/Completion-Widgets.html#Completion-Matching-Control
+zstyle ':completion:*' menu select # Always do "menu-style" auto completion, with navigatable grid of selection options
+zstyle ':completion:*' list-colors '' # Use default colors, which should be the ls colors
+zstyle :compinstall filename '/home/kendall/.zshrc' # Added by compintall, not sure
+
+setopt appendhistory # Append history entries to end of history file
+setopt hist_ignore_dups # Ignore duplicate in history.
+setopt hist_ignore_space # Prevent record in history entry if preceding them with at least one space
+setopt inc_append_history_time
+
+setopt interactivecomments # Ignore lines prefixed with '#'.
+setopt extendedglob # Better filename expansion (~ -> /home/kahrends)
+unsetopt beep # No annoying beep
+setopt noflowcontrol # Disable flow control, not entirely sure what this does
+setopt noclobber # Don’t write over existing files with >, use >! instead
+setopt sharehistory # Load and write history right away (use set-local-history for commands that need to navigate locally)
 
 autoload -Uz compinit
-compinit
-# End of lines added by compinstall
-# Lines configured by zsh-newuser-install
-HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=100000
-setopt appendhistory extendedglob
-unsetopt beep
-bindkey -v
-# End of lines configured by zsh-newuser-install
+compinit # Enable completions
+zmodload zsh/complist # Not entirely sure why, but this needs to be loaded before we're allowed to set up keys for the menuselect key table
 
-##### Settings
-bindkey -e # Emacs mode for line editing
+
+##### Keybindings
+
+# Control-x-e to open current line in $EDITOR
+autoload -Uz edit-command-line
+zle -N edit-command-line # zsh needs functions to become "widgets" to bind them to keys, zle -N defines a "user-defined" widget
+bindkey '^x^e' edit-command-line
+
+bindkey "^[q" push-line-or-edit # ^[ is escape. If on first editor line, pops the current contents until after a different cmd is run, else turns multi-line quote to editable form (can navigate with arrows/backspace through)
+bindkey -M menuselect '^ ' accept-and-infer-next-history # Use ctrl-space in menu-select to open a dir and show sub-dirs in the menu
+bindkey -M menuselect '^A' send-break # Abort menu selection
+
+bindkey "^[[A" local-history-beginning-search-backward # Go up in local history only, see below
+bindkey "^[[B" local-history-beginning-search-forward # Same for down
+
+# Use arrow keys to search local history (using words up to cursor in search)
+local-history-beginning-search-backward() {
+    zle set-local-history 1
+    zle history-beginning-search-backward
+    zle set-local-history 0
+}
+local-history-beginning-search-forward() {
+    zle set-local-history 1
+    zle history-beginning-search-forward
+    zle set-local-history 0
+}
+zle -N local-history-beginning-search-backward # Sets the above function as a widget so it can be keybound
+zle -N local-history-beginning-search-forward 
+
+# Ability to alt-backspace dirs like in bash
+backward-kill-dir () {
+    local WORDCHARS=${WORDCHARS/\/}
+    zle backward-kill-word
+}
+zle -N backward-kill-dir
+bindkey '^[^?' backward-kill-dir
+
+# History file settings
+HISTFILE=~/.histfile
+HISTSIZE=10000 # Max history size of a session
+SAVEHIST=100000 # Max size of histfile
+
+##### Prompt
 
 # ANSI Color escape codes
 # ANSI escape codes are interpreted by the terminal
