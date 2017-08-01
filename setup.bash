@@ -154,7 +154,15 @@ $installer xclip || echo "Couldn't install xclip"
 #install tree
 #$installer tree || echo "Couldn't install tree"
 
-usedSpaceEnd=$(((df --total 2> /dev/null | grep total) || (df 2> /dev/null | grep disk1)) | awk 'END{print $3;}')
+# Pull down zsh-syntax-highlighting
+git submodule init
+git submodule update
+
+# Copy zsh-syntax-highlighting to home
+mkdir ~/.zsh
+cp -R "$dir"/zsh-syntax-highlighting ~/.zsh && echo 'Copied zsh-syntax-highlighting to .zsh'
+
+usedSpaceEnd=$( ( (df --total 2> /dev/null | grep total) || (df 2> /dev/null | grep disk1) ) | awk 'END{print $3;}')
 installSpace=$((usedSpaceEnd-usedSpaceStart))
 kilo=$((installSpace%1024))
 mega=$((installSpace/1024))
