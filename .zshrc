@@ -47,6 +47,13 @@ autoload -Uz compinit
 compinit # Enable completions
 zmodload zsh/complist # Not entirely sure why, but this needs to be loaded before we're allowed to set up keys for the menuselect key table
 
+autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+add-zsh-hook chpwd chpwd_recent_dirs # Enable cdr for recent directory navigation, see http://zsh.sourceforge.net/Doc/Release/User-Contributions.html#Recent-Directories
+zstyle ':chpwd:*' recent-dirs-max 40 # chpwd is config for cdr
+#zstyle ':chpwd:*' recent-dirs-file ~/.chpwd-recent-dirs-${TTY##*/} + # Way to do per-terminal recent dirs
+zstyle ':chpwd:*' recent-dirs-default true # Fall through to cd
+zstyle ':chpwd:*' recent-dirs-insert true # Insert the actual dir name instead of the number (doesn't seem to work?)
+
 
 ##### Keybindings
 
