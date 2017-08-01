@@ -34,7 +34,7 @@ up() {
         while [[ count -lt "$1" ]]
         do
             cdStr+="../"
-            ( count+=1 )
+            (( count+=1 ))
         done;
         cd $cdStr || return 1
     fi;
