@@ -91,7 +91,7 @@ which yum &> /dev/null && installer="sudo yum -y install" && upgrade="sudo yum -
 which aptitude &> /dev/null && installer="sudo aptitude -y install" && upgrade="sudo aptitude -y upgrade" && echo "Found aptitude for installer"
 
 #OSX
-uname &> /dev/null | grep -i darwin && (which brew || (ruby $(dirname $0)/homebrew_install.rb && echo "Installed homebrew")) && installer="brew install" && upgrade="brew upgrade" && brew update && zsh $dir/di-xquartz.sh && echo "Found brew for installer"
+uname | grep -i darwin &> /dev/null && (which brew || (ruby $(dirname $0)/homebrew_install.rb && echo "Installed homebrew")) && installer="brew install" && upgrade="brew upgrade" && brew update && zsh $dir/di-xquartz.sh && echo "Found brew for installer"
 
 #Arch
 which pacman &>/dev/null && installer="sudo pacman -S --noconfirm " && upgrade="sudo pacman -Syu" && echo "Found pacman for installer"
@@ -137,19 +137,6 @@ vim +PluginInstall +qall || echo "Couldn't install vim plugins"
 #$installer rubygems || echo "Couldn't install rubygems"
 #sudo gem install bropages || echo "Couldn't install bro"
 #sudo gem install rake || echo "Couldn't install rake"
-
-#install most, should color man pages and stuff
-#$installer most || echo "Could not install most"
-
-#make sure wget is installed
-#$installer wget
-
-#get git completion scripts
-#wget -O --no-check-certificate ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh || echo "Couldn't fetch git-prompt.sh"
-#wget -O --no-check-certificate ~/.git-completion.bash https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash || echo "Couldn't fetch git-completion.bash"
-
-#install autojump
-#$installer autojump || echo "Couldn't install autojump"
 
 #install lsof
 #$installer lsof || echo "Couldn't install lsof"
