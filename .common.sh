@@ -207,6 +207,8 @@ add_venv_info () {
 #Use 'command not found' if possible
  [ -r /etc/profile.d/cnf.sh ] && . /etc/profile.d/cnf.sh 
 
+# Add local installed files to path
+export PATH=$PATH:~/.local/bin:~/bin
 
 
 #Stuff to print out at the beginning of the session
