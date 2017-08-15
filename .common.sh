@@ -4,7 +4,7 @@
 
 ##### Aliases
 #alias rm=gvfs-trash
-alias grep='grep --color=auto' #MAC OK?
+alias grep='grep --color="auto"' #MAC OK?
 alias ll='ls -Alv' #MAC OK
 ls -h --color=auto &> /dev/null && alias ls='ls -h --color=auto' || alias ls='ls -hG' #Always colorize and use sensible sizes, should now be MAC OK
 alias vi='vim'
