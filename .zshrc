@@ -91,6 +91,12 @@ backward-kill-dir () {
 zle -N backward-kill-dir
 bindkey '^[^?' backward-kill-dir
 
+# Copy arg on current line with Alt-m. Like Alt-. but for current line instead of last
+# http://chneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html
+autoload -Uz copy-earlier-word
+zle -N copy-earlier-word
+bindkey "^[m" copy-earlier-word
+
 # History file settings
 HISTFILE=~/.histfile
 HISTSIZE=10000 # Max history size of a session
