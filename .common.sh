@@ -19,7 +19,10 @@ alias sl='ls'
 #Quick access to the config files
 alias vimrc='vim ~/.vimrc'
 alias bashrc='vim ~/.bashrc'
+alias bashrclocal='vim ~/.bashrc.local'
 alias zshrc='vim ~/.zshrc'
+alias zshrclocal='vim ~/.zshrc.local'
+alias commonsh='vim ~/.common.sh'
 # Open files from terminal
 which xdg-open &> /dev/null && alias open=xdg-open
 
