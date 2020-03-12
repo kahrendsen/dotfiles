@@ -144,6 +144,10 @@ function precmd {
     PS1="$(get_prompt_str)"
 }
 
+# Aliases
+alias reloadrc='source ~/.zshrc'
+
+# Loading other scripts
 source ~/.common.sh
 [[ -e ~/.zshrc.local ]] && source ~/.zshrc.local;
 [[ -a ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # The instructions for this say it needs to be sourced last
