@@ -146,6 +146,7 @@ function precmd {
 
 # Aliases
 alias reloadrc='source ~/.zshrc'
+alias -g LASTDOWN='$(ls -t ~/Downloads/ | head -n 1)'
 
 # Loading other scripts
 source ~/.common.sh

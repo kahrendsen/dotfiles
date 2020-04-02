@@ -25,6 +25,18 @@ alias zshrclocal='vim ~/.zshrc.local'
 alias commonsh='vim ~/.common.sh'
 # Open files from terminal
 which xdg-open &> /dev/null && alias open=xdg-open
+# Android
+alias fgActivity="adb shell dumpsys window windows | grep -E 'mCurrentFocus|mFocusedApp'"
+alias androidVersion='adb shell getprop ro.build.display.id'
+alias adbb='adb shell am broadcast -a'
+alias screenshot='adb shell screencap -p /sdcard/screenshot.png && adb pull /sdcard/screenshot.png'
+alias recordscreen='adb shell screenrecord /sdcard/video.mp4'
+alias pullvideo='adb pull /sdcard/video.mp4'
+alias logcat='adb logcat'
+alias sendtext='adb shell input text'
+alias noprune='adb logcat -P ""'
+alias killCanary='adb shell setprop log.tag.LeakCanaryMagicFlag ERROR'
+
 
 
 ##### Functions
@@ -98,6 +110,11 @@ addpath()
         export PATH=$PATH:$1
     fi
 
+}
+
+function getAndroidId() {
+  adb root
+  adb shell 'sqlite3 /data/data/com.google.android.gsf/databases/gservices.db "select value from main where name = \"android_id\";"'
 }
 
 #function savepath()
