@@ -1,4 +1,5 @@
 #!/usr/bin/env ksh
+# shellcheck disable=SC2111
 # ksh gets us close enough to the intersection between bash and zsh
 # should probably run the zsh side with emulate -L ksh
 
@@ -23,8 +24,9 @@ alias bashrclocal='vim ~/.bashrc.local'
 alias zshrc='vim ~/.zshrc'
 alias zshrclocal='vim ~/.zshrc.local'
 alias commonsh='vim ~/.common.sh'
-# Open files from terminal
+# Open files or urls from terminal
 which xdg-open &> /dev/null && alias open=xdg-open
+which xdg-open &> /dev/null && alias github='echo "Use:\nssh-keygen -t ed25519\nOR\nssh-keygen -t rsa\nThen ssh-add\nThen:\ncat ~/.ssh/id_ed25519.pub\nOR\ncat~/.ssh/id_rsa.pub\nOr, use ezkey" && xdg-open "https://github.com/settings/ssh/new"'
 # Android
 alias fgActivity="adb shell dumpsys window windows | grep -E 'mCurrentFocus|mFocusedApp'"
 alias androidVersion='adb shell getprop ro.build.display.id'
@@ -69,16 +71,16 @@ swap()
 }
 
 #Automate the slightly irritating process to get RSA keys onto GitHub.
-ezkey() 
+ezkey()
 {
-    pushd "$(pwd)"
+    pushd "$(pwd)" || (echo "pushd failed" && exit)
     cd ~/.ssh || return 1
     ssh-keygen
     ssh-add id_rsa
     which xclip &> /dev/null && xclip -sel clip < ~/.ssh/id_rsa.pub
     cat ~/.ssh/id_rsa.pub
     open https://github.com/settings/ssh 
-    popd | cd || return 1
+    popd | xargs cd || return 1
 }
 
 google() {
@@ -200,7 +202,6 @@ function git_branch_ps1 {
         #Nothing to commit
         echo "$GREEN$(__git_ps1 "(%s)" 2> /dev/null)$COLOR_OFF";
     fi
-
 }
 # Virtual ENV stuff
 # https://stackoverflow.com/questions/14987013
@@ -208,15 +209,10 @@ add_venv_info () {
     if [ -z "$VIRTUAL_ENV_DISABLE_PROMPT" ] ; then
         VIRT_ENV_TXT=""
         if [ "x" != x ] ; then
+            # This is supposedly a way to determine if we're using a bash-like shell (but I'm not sure how)
             VIRT_ENV_TXT=""
-        else
-            if [ "`basename \"$VIRTUAL_ENV\"`" = "__" ] ; then
-                # special case for Aspen magic directories
-                # see http://www.zetadev.com/software/aspen/
-                VIRT_ENV_TXT="[`basename \`dirname \"$VIRTUAL_ENV\"\``]"
-            elif [ "$VIRTUAL_ENV" != "" ]; then
-                VIRT_ENV_TXT="(`basename \"$VIRTUAL_ENV\"`)"
-            fi
+        elif [ "$VIRTUAL_ENV" != "" ]; then
+            VIRT_ENV_TXT="(`basename \"$VIRTUAL_ENV\"`)"
         fi
         if [ "${VIRT_ENV_TXT}" != "" ]; then
            echo ${VIRT_ENV_TXT}" "

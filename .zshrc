@@ -140,13 +140,18 @@ NEWLINE="
 USERNAME_PROMPT="%n"
 HOSTNAME_PROMPT="%m"
 
+# Special function zsh executes before each prompt, see https://zsh.sourceforge.io/Doc/Release/Functions.html#Special-Functions
 function precmd {
     PS1="$(get_prompt_str)"
 }
 
 # Aliases
 alias reloadrc='source ~/.zshrc'
-alias -g LASTDOWN='$(ls -t ~/Downloads/ | head -n 1)'
+# zsh has global aliases that you can use with the -g option, that will replace the text of the alias at any location in a command, not just the beginning
+alias -g gLASTDOWN='$(ls -t ~/Downloads/ | head -n 1)'
+alias -g gRSAKEY='~/.ssh/id_rsa.pub'
+alias -g gEDKEY='~/.ssh/id_ed25519.pub'
+alias -g gWINHOME='/mnt/c/Users/kendall' # For WSL, there's techincally WSLENV but I don't want to deal with finding the right way to parse it right now
 
 # Loading other scripts
 source ~/.common.sh

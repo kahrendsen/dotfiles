@@ -1,10 +1,9 @@
 #!/bin/bash
 
 #A setup file for making the environment the way I like it. I kinda-sorta made it cross-platform-ish.
-#I hope for it to work on all flavors of Debian, Fedora, and OSX/Darwin. Maybe I will add arch and Cygwin later. I think openSUSE is RPM based so maybe those are covered too
-#Terminal emulator is an issue as well, this should hopefully support Gnome shell, Konsole, Xfce terminal, xterm, and iTerm2. Maybe I'll add Cygwin one day
+#I hope for it to work on all flavors of Debian, Fedora, and OSX/Darwin.
+#Terminal emulator is an issue as well, this should hopefully support Gnome shell, Konsole, Xfce terminal, xterm, and iTerm2.
 #Will probably never add Gentoo or Slackware
-#Everything needs to be updated with BSD alternatives to be usable on mac
 echo "Starting setup script..."
 
 #Record this script's directory
@@ -18,10 +17,15 @@ sudo chmod 744 $dir/* && echo 'Successfully changed permissions' || echo 'Failed
 
 # make the hard links so we don't have to move them back and forth to commit/push/pull
 echo 'Linking dotfiles in home...'
-ln -i $(dirname $0)/.vimrc ~/
-ln -i $(dirname $0)/.bashrc ~/
-ln -i $dir/.common.sh ~/
-ln -i $dir/.zshrc ~/
+ln -i "$(dirname "$0")"/.vimrc ~/ \
+    || (echo "Hard link of .vimrc failed, falling back to soft link" && ln -s "$(dirname "$0")"/.vimrc ~/)
+ln -i $(dirname $0)/.bashrc ~/ \
+    || (echo "Hard link of .bashrc failed, falling back to soft link" && ln -s "$(dirname "$0")"/.bashrc ~/)
+ln -i $dir/.common.sh ~/ \
+    || (echo "Hard link of .common.sh failed, falling back to soft link" && ln -s "$(dirname "$0")"/.common.sh ~/)
+ln -i $dir/.zshrc ~/ \
+    || (echo "Hard link of .zshrc failed, falling back to soft link" && ln -s "$(dirname "$0")"/.zshrc ~/)
+
 echo 'Finished linking dotfiles'
 
 
@@ -34,15 +38,8 @@ cp $(dirname $0)/git-prompt.sh ~
 cp $(dirname $0)/git-completion.bash ~
 echo 'Finished copying git stuff'
 
-
-#Kill CapsLock
-#currently doesn't work on mac (or at all?)
-#( (dumpkeys | grep keymaps; echo "keycode 58 = Escape") | loadkeys) &> /dev/null
-#Maybe kill mouse accel too?
-
 #make sure bashrc loads in login shells too
 grep "source ~/.bashrc" ~/.bash_profile &> /dev/null || (echo "source ~/.bashrc" >> ~/.bash_profile && echo 'Added "source ~/.bashrc" to ~/.bash_profile')
-
 
 ###################################################################################################
 
@@ -71,13 +68,11 @@ fi
 #Konsole
 #cp SolarizedDark.colorscheme ~/.kde/share/apps/konsole &> /dev/null || echo "Not Konsole"
 
-
 #note how much space we have now so we know how much we used when we're through
 #hopefully this helps figure out if I can use this on, say, a Raspberry Pi
-#MAC OK
-usedSpaceStart=$(((df --total 2> /dev/null | grep total) || (df 2> /dev/null | grep disk1)) | awk 'END{print $3;}')
+usedSpaceStart=$( ( (df --total 2> /dev/null | grep total) || (df 2> /dev/null | grep disk1) ) | awk 'END{print $3;}')
 
-#major package managers: aptitude - debian, yum - fedora, homebrew - OSX, 
+#major package managers: apt - Debian, yum - Fedora, homebrew - OSX, pacman - Arch
 
 echo "Trying to find package manager..."
 
@@ -85,16 +80,31 @@ installer="ERROR" # somehow didnt have aptitude or yum and we're not on OSX, or 
 upgrade="ERROR"
 
 #Fedora
-which yum &> /dev/null && installer="sudo yum -y install" && upgrade="sudo yum -y upgrade" && echo "Found yum for installer"
+which yum &> /dev/null && installer="sudo yum -y install" \
+    && upgrade="sudo yum -y upgrade" \
+    && echo "Found yum for installer"
 
 #Debian
-which aptitude &> /dev/null && installer="sudo aptitude -y install" && upgrade="sudo aptitude -y upgrade" && echo "Found aptitude for installer"
+which apt &> /dev/null \
+    && installer="sudo apt -y install" \
+    && upgrade="sudo apt -y upgrade" \
+    && sudo apt update \
+    && echo "Found apt for installer"
 
 #OSX
-uname | grep -i darwin &> /dev/null && (which brew || (ruby $(dirname $0)/homebrew_install.rb && echo "Installed homebrew")) && installer="brew install" && upgrade="brew upgrade" && brew update && zsh $dir/di-xquartz.sh && echo "Found brew for installer"
+uname | grep -i darwin &> /dev/null \
+    && (which brew || (ruby "$(dirname "$0")"/homebrew_install.rb && echo "Installed homebrew")) \
+    && installer="brew install" \
+    && upgrade="brew upgrade" \
+    && brew update \
+    && zsh $dir/di-xquartz.sh \
+    && echo "Found brew for installer"
 
 #Arch
-which pacman &>/dev/null && installer="sudo pacman -S --noconfirm " && upgrade="sudo pacman -Syu" && echo "Found pacman for installer"
+which pacman &>/dev/null \
+    && installer="sudo pacman -S --noconfirm " \
+    && upgrade="sudo pacman -Syu" \
+    && echo "Found pacman for installer"
 
 if [ "$installer" == "ERROR" ] || [ "$upgrade" == "ERROR" ]; 
     then
@@ -102,10 +112,10 @@ if [ "$installer" == "ERROR" ] || [ "$upgrade" == "ERROR" ];
         exit;
 fi
 
-#make sure everything is up to date, unfortunately have to use upgrade cuz homebrew
+#make sure everything is up to date
 read -p "Do you want to upgrade existing packages? " yn
 case $yn in
-    [Yy]* ) $upgrade; break;;
+    [Yy]* ) $upgrade;;
     [Nn]* ) echo "Not upgrading";;
     * ) echo "Please answer yes or no.";;
 esac
@@ -116,7 +126,7 @@ echo "Checking for git..."
 
 #Try to get Vundle
 echo "Trying to install Vundle..."
-git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2>&1 
+git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2>&1 || echo "Could not install Vundle"
 #git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2>&1 || { echo >&2 "Git not installed, attempting to install..."; sudo apt-get -y install git-core; git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim }
 
 #install zsh
@@ -124,7 +134,12 @@ echo "Trying to install zsh..."
 $installer zsh || echo "Couldn't install zsh"
 
 #set shell to zsh
-#sudo chsh $(whoami) -s /bin/zsh
+read -r -p "Do you want to set zsh as your shell? " yn
+case $yn in
+    [Yy]* ) chsh "$(whoami)" -s /bin/zsh;;
+    [Nn]* ) echo "NOT changing shell";;
+    * ) echo "Please answer yes or no.";;
+esac
 
 #make sure vim is installed
 echo "Checking vim is installed..."
@@ -133,26 +148,28 @@ echo "Checking vim is installed..."
 #Install plugins
 vim +PluginInstall +qall || echo "Couldn't install vim plugins"
 
-#Install bro because I'm a noob
-#$installer rubygems || echo "Couldn't install rubygems"
-#sudo gem install bropages || echo "Couldn't install bro"
-#sudo gem install rake || echo "Couldn't install rake"
+# install lsof
+echo "Trying to install lsof..."
+$installer lsof || echo "Couldn't install lsof"
 
-#install lsof
-#$installer lsof || echo "Couldn't install lsof"
-
-#install htop
-#$installer htop || echo "Couldn't install htop"
+# install htop
+echo "Trying to install htop..."
+$installer htop || echo "Couldn't install htop"
 
 #install ncdu
-#$installer ncdu || echo "Couldn't install ncdu"
+echo "Trying to install ncdu..."
+$installer ncdu || echo "Couldn't install ncdu"
 
 #install xclip
-echo "Trying to install xclip..."
-$installer xclip || echo "Couldn't install xclip"
+# echo "Trying to install xclip..."
+# $installer xclip || echo "Couldn't install xclip"
 
 #install tree
-#$installer tree || echo "Couldn't install tree"
+echo "Trying to install tree..."
+$installer tree || echo "Couldn't install tree"
+
+echo "Trying to install tldr..."
+$installer tldr || echo "Couldn't install tldr"
 
 # Pull down zsh-syntax-highlighting
 git submodule init
