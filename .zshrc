@@ -157,3 +157,6 @@ alias -g gWINHOME='/mnt/c/Users/kendall' # For WSL, there's techincally WSLENV b
 source ~/.common.sh
 [[ -e ~/.zshrc.local ]] && source ~/.zshrc.local;
 [[ -a ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh # The instructions for this say it needs to be sourced last
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+

@@ -130,8 +130,12 @@ git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2>&1
 #git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 2>&1 || { echo >&2 "Git not installed, attempting to install..."; sudo apt-get -y install git-core; git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim }
 
 #install zsh
-echo "Trying to install zsh..."
-$installer zsh || echo "Couldn't install zsh"
+read -r -p "Do you want to install zsh? " yn
+case $yn in
+    [Yy]* ) $installer zsh;;
+    [Nn]* ) echo "NOT installing zsh";;
+    * ) echo "Please answer yes or no.";;
+esac
 
 #set shell to zsh
 read -r -p "Do you want to set zsh as your shell? " yn
